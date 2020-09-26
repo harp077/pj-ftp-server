@@ -136,7 +136,7 @@
                         </manifest>
                         <manifestEntries>
                             <Version>${buildNumber}</Version>
-                            <SplashScreen-Image>logo.png</SplashScreen-Image>
+                            <SplashScreen-Image>img/logo/ftp-orange-logo-225.png</SplashScreen-Image>
                         </manifestEntries>
                     </archive>
                 </configuration>

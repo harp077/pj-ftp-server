@@ -55,7 +55,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static Map<String, String> argsHM = new HashMap<String, String>();
     public static Thread Log_Thread;
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.0, build 25-09-2020";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.1, build 26-09-2020";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -111,7 +111,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         server = factory.createServer();
         server.start();
         //jul.log(Level.SEVERE, "oppanki");
-        j4log.log(Level.INFO, "oppanki");
+        j4log.log(Level.INFO, "pj-ftp-server running");
         running = true;
         Log_Thread = new Log_Thread("log/app.log");
         try {
@@ -429,7 +429,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                     JDialog.setDefaultLookAndFeelDecorated(true);
                     frame.setSize(FW, FH);
                     frame.setResizable(false);
-                    frame.setLocation(111, 111);
+                    frame.setLocation(200, 200);
                     frame.setResizable(true);
                     frame.setVisible(true);
                 }
