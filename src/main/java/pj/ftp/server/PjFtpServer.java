@@ -69,7 +69,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         ImageIcon icone = new ImageIcon(getClass().getResource("/img/top-frame-triangle-16.png"));
         this.setIconImage(icone.getImage());
         this.setTitle(zagolovok);
-        this.btnSkin.setVisible(false);
+        //this.btnSkin.setVisible(false);
         this.taLog.setCursor(Cursor.getDefaultCursor());
     }
 
@@ -192,7 +192,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         taLog = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jToolBar2 = new javax.swing.JToolBar();
-        btnSkin = new javax.swing.JButton();
+        btnAbout = new javax.swing.JButton();
         jSeparator11 = new javax.swing.JToolBar.Separator();
         btnSelectFolder = new javax.swing.JButton();
         jSeparator9 = new javax.swing.JToolBar.Separator();
@@ -279,17 +279,17 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2.setFloatable(false);
         jToolBar2.setRollover(true);
 
-        btnSkin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/color_choose-16.png"))); // NOI18N
-        btnSkin.setText("Skin");
-        btnSkin.setFocusable(false);
-        btnSkin.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        btnSkin.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnSkin.addActionListener(new java.awt.event.ActionListener() {
+        btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/info-16.png"))); // NOI18N
+        btnAbout.setText(" About");
+        btnAbout.setFocusable(false);
+        btnAbout.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnAbout.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSkinActionPerformed(evt);
+                btnAboutActionPerformed(evt);
             }
         });
-        jToolBar2.add(btnSkin);
+        jToolBar2.add(btnAbout);
         jToolBar2.add(jSeparator11);
 
         btnSelectFolder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/folder-green-16.png"))); // NOI18N
@@ -347,11 +347,13 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_checkBoxAnonymousItemStateChanged
 
     private void btnQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitActionPerformed
-        try {
-            server.stop();
-        } catch (NullPointerException ne) {
+        int r = JOptionPane.showConfirmDialog(frame, "Really Quit ?", "Quit ?", JOptionPane.YES_NO_OPTION);
+        if (r == JOptionPane.YES_OPTION) {
+            try {
+                server.stop();
+            } catch (NullPointerException ne) {        }
+            System.exit(0);           
         }
-        System.exit(0);
     }//GEN-LAST:event_btnQuitActionPerformed
 
     private void btnToggleRunStopItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnToggleRunStopItemStateChanged
@@ -368,7 +370,8 @@ public class PjFtpServer extends javax.swing.JFrame {
                 btnToggleRunStop.setIcon(iconOn);
                 btnToggleRunStop.setText("Run server");
                 setBooleanBtnTf(true);
-                frame.setTitle(zagolovok + ", server stop");                
+                frame.setTitle(zagolovok + ", server stop");
+                j4log.log(Level.INFO, "pj-ftp-server stop");
                 return;
             }
         }
@@ -402,9 +405,19 @@ public class PjFtpServer extends javax.swing.JFrame {
         }//switch
     }//GEN-LAST:event_btnSelectFolderActionPerformed
 
-    private void btnSkinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSkinActionPerformed
-        changeLF();
-    }//GEN-LAST:event_btnSkinActionPerformed
+    private void btnAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutActionPerformed
+        //changeLF();
+        String msg = " PJ-FTP-SERVER: "
+                + "\n Pure Java FTP server. "
+                + "\n Create by Roman Koldaev, "
+                + "\n Saratov city, Russia. "
+                + "\n mail: harp07@mail.ru "
+                + "\n SourceForge: https://sf.net/u/harp07/profile/ "
+                + "\n GitHub: https://github.com/harp077/ "
+                + "\n Need JRE-1.8."; 
+        ImageIcon icone = new ImageIcon(getClass().getResource("/img/logo/ftp-green-logo-128.png"));
+        JOptionPane.showMessageDialog(frame, msg, "About", JOptionPane.INFORMATION_MESSAGE, icone);
+    }//GEN-LAST:event_btnAboutActionPerformed
 
     public static void main(String args[]) {
 
@@ -423,12 +436,12 @@ public class PjFtpServer extends javax.swing.JFrame {
                 if (args.length == 0) {
                     frame = new PjFtpServer();
                     frame.InstallLF();
-                    frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
                     frame.setLF(frame);
+                    frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
                     JFrame.setDefaultLookAndFeelDecorated(true);
                     JDialog.setDefaultLookAndFeelDecorated(true);
+                    JOptionPane.setRootFrame(frame);
                     frame.setSize(FW, FH);
-                    frame.setResizable(false);
                     frame.setLocation(200, 200);
                     frame.setResizable(true);
                     frame.setVisible(true);
@@ -454,9 +467,9 @@ public class PjFtpServer extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAbout;
     private javax.swing.JButton btnQuit;
     public static javax.swing.JButton btnSelectFolder;
-    private javax.swing.JButton btnSkin;
     public static javax.swing.JToggleButton btnToggleRunStop;
     public static javax.swing.JCheckBox checkBoxAnonymous;
     private javax.swing.JLabel jLabel1;
