@@ -279,7 +279,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2.setFloatable(false);
         jToolBar2.setRollover(true);
 
-        btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/info-16.png"))); // NOI18N
+        btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/info-cyan-16.png"))); // NOI18N
         btnAbout.setText(" About");
         btnAbout.setFocusable(false);
         btnAbout.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
