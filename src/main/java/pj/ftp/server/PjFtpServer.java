@@ -55,7 +55,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static Map<String, String> argsHM = new HashMap<String, String>();
     public static Thread Log_Thread;
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.1, build 26-09-2020";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.2, build 26-09-2020";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -73,7 +73,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.taLog.setCursor(Cursor.getDefaultCursor());
     }
 
-    private synchronized static void startServer(String tcpPort, String login, String password, String folder) throws FtpException, FtpServerConfigurationException {
+    private synchronized static void startServer(String args[], String tcpPort, String login, String password, String folder) throws FtpException, FtpServerConfigurationException {
         ////////////File propertiesFile = new File("cfg/log4j.properties");
         ////////////PropertyConfigurator.configure(propertiesFile.toString());
         PropertyConfigurator.configure("cfg/log4j.properties");
@@ -113,11 +113,13 @@ public class PjFtpServer extends javax.swing.JFrame {
         //jul.log(Level.SEVERE, "oppanki");
         j4log.log(Level.INFO, "pj-ftp-server running");
         running = true;
-        Log_Thread = new Log_Thread("log/app.log");
-        try {
-            Log_Thread.start();
-        } catch (IllegalThreadStateException itse) {}
-        frame.setTitle(zagolovok + ", server running");
+        if (args.length == 0) {
+            Log_Thread = new Log_Thread("log/app.log");
+            try {
+                Log_Thread.start();
+            } catch (IllegalThreadStateException itse) {}
+            frame.setTitle(zagolovok + ", server running");
+        }
     }
 
     public static void MyInstLF(String lf) {
@@ -377,7 +379,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         }
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             try {
-                startServer(tfPort.getText().trim(), tfUser.getText().trim(), tfPassw.getText().trim(), tfFolder.getText().trim());
+                startServer(new String[0], tfPort.getText().trim(), tfUser.getText().trim(), tfPassw.getText().trim(), tfFolder.getText().trim());
                 btnToggleRunStop.setIcon(iconOf);
                 btnToggleRunStop.setText("Stop server");
                 setBooleanBtnTf(false);
@@ -457,7 +459,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                     }
                     System.out.println(argsHM);                    
                     try {
-                        startServer(argsHM.get("port").trim(), argsHM.get("user").trim(), argsHM.get("passw").trim(), argsHM.get("folder").trim());
+                        startServer(args, argsHM.get("port").trim(), argsHM.get("user").trim(), argsHM.get("passw").trim(), argsHM.get("folder").trim());
                     } catch (FtpException | FtpServerConfigurationException ex) {
                         java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     }
