@@ -130,7 +130,7 @@
             <Component class="javax.swing.JToggleButton" name="btnToggleRunStop">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/img/run-16.png"/>
+                  <Image iconType="3" name="/img/go-green-krug-16.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Run server "/>
                 <Property name="focusable" type="boolean" value="false"/>
@@ -153,7 +153,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Output"/>
+            <TitledBorder title="Log-File content - /log/app.log"/>
           </Border>
         </Property>
       </Properties>
@@ -260,6 +260,24 @@
               </AuxValues>
             </Component>
             <Component class="javax.swing.JToolBar$Separator" name="jSeparator10">
+            </Component>
+            <Component class="javax.swing.JButton" name="btnClearLog">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/img/clear-yellow-16.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Clear Log"/>
+                <Property name="focusable" type="boolean" value="false"/>
+                <Property name="horizontalTextPosition" type="int" value="4"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearLogActionPerformed"/>
+              </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JToolBar$Separator" name="jSeparator8">
             </Component>
             <Component class="javax.swing.JButton" name="btnQuit">
               <Properties>

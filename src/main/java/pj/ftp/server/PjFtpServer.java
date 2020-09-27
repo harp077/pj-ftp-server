@@ -4,6 +4,9 @@ package pj.ftp.server;
 //import com.jgoodies.looks.plastic.theme.SkyGreen;
 import java.awt.Cursor;
 import java.awt.event.ItemEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -55,7 +58,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static Map<String, String> argsHM = new HashMap<String, String>();
     public static Thread Log_Thread;
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.2, build 26-09-2020";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.3, build 27-09-2020";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -103,7 +106,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         ConnectionConfigFactory configFactory = new ConnectionConfigFactory();
         //configFactory.setAnonymousLoginEnabled(true);
-        configFactory.setMaxThreads(4);
+        configFactory.setMaxThreads(11);
         factory.setConnectionConfig(configFactory.createConnectionConfig());
         mrLog = factory.getMessageResource();
         Map<String, String> hmLog = mrLog.getMessages("INFO");
@@ -128,7 +131,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         lookAndFeelsRealNames.add(lf);
     }
 
-    public void changeLF() {
+    /*public void changeLF() {
         String changeLook = (String) JOptionPane.showInputDialog(frame, "Choose Look and Feel Here:", "Select Look and Feel", JOptionPane.QUESTION_MESSAGE, new ImageIcon(getClass().getResource("/img/color_swatch.png")), lookAndFeelsDisplay.toArray(), null);
         if (changeLook != null) {
             for (int a = 0; a < lookAndFeelsDisplay.size(); a++) {
@@ -139,7 +142,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                 }
             }
         }
-    }
+    }*/
 
     public void setLF(JFrame frame) {
         try {
@@ -200,6 +203,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         jSeparator9 = new javax.swing.JToolBar.Separator();
         tfFolder = new javax.swing.JTextField();
         jSeparator10 = new javax.swing.JToolBar.Separator();
+        btnClearLog = new javax.swing.JButton();
+        jSeparator8 = new javax.swing.JToolBar.Separator();
         btnQuit = new javax.swing.JButton();
         jSeparator7 = new javax.swing.JToolBar.Separator();
 
@@ -248,7 +253,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar1.add(checkBoxAnonymous);
         jToolBar1.add(jSeparator3);
 
-        btnToggleRunStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/run-16.png"))); // NOI18N
+        btnToggleRunStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/go-green-krug-16.png"))); // NOI18N
         btnToggleRunStop.setText("Run server ");
         btnToggleRunStop.setFocusable(false);
         btnToggleRunStop.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -264,7 +269,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Log-File content - /log/app.log"));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         taLog.setColumns(20);
@@ -310,6 +315,18 @@ public class PjFtpServer extends javax.swing.JFrame {
         tfFolder.setText("/tmp");
         jToolBar2.add(tfFolder);
         jToolBar2.add(jSeparator10);
+
+        btnClearLog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clear-yellow-16.png"))); // NOI18N
+        btnClearLog.setText("Clear Log");
+        btnClearLog.setFocusable(false);
+        btnClearLog.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnClearLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearLogActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(btnClearLog);
+        jToolBar2.add(jSeparator8);
 
         btnQuit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/quit-16.png"))); // NOI18N
         btnQuit.setText("Quit");
@@ -364,7 +381,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             btnToggleRunStop.setSelected(false);
             return;
         }
-        ImageIcon iconOn = new ImageIcon(getClass().getResource("/img/run-16.png"));
+        ImageIcon iconOn = new ImageIcon(getClass().getResource("/img/go-green-krug-16.png"));
         ImageIcon iconOf = new ImageIcon(getClass().getResource("/img/stop-16.png"));
         if (evt.getStateChange() == ItemEvent.DESELECTED) {
             if (running == true) {
@@ -410,6 +427,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private void btnAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutActionPerformed
         //changeLF();
         String msg = " PJ-FTP-SERVER: "
+                + "\n Free portable cross-platform"
                 + "\n Pure Java FTP server. "
                 + "\n Create by Roman Koldaev, "
                 + "\n Saratov city, Russia. "
@@ -421,8 +439,25 @@ public class PjFtpServer extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(frame, msg, "About", JOptionPane.INFORMATION_MESSAGE, icone);
     }//GEN-LAST:event_btnAboutActionPerformed
 
-    public static void main(String args[]) {
+    private void btnClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearLogActionPerformed
+        try {
+            new PrintWriter("log/app.log").close();
+            taLog.setText("");
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }        
+        /*try (PrintWriter writer = new PrintWriter("log/app.log")) {
+            writer.print("");
+            writer.close();
+            taLog.setText("");
+            //taLog.repaint();
+            //taLog.updateUI();
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }*/
+    }//GEN-LAST:event_btnClearLogActionPerformed
 
+    public static void main(String args[]) {
         /*try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Metal".equals(info.getName())) {
@@ -470,6 +505,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbout;
+    public static javax.swing.JButton btnClearLog;
     private javax.swing.JButton btnQuit;
     public static javax.swing.JButton btnSelectFolder;
     public static javax.swing.JToggleButton btnToggleRunStop;
@@ -490,6 +526,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar.Separator jSeparator6;
     private javax.swing.JToolBar.Separator jSeparator7;
+    private javax.swing.JToolBar.Separator jSeparator8;
     private javax.swing.JToolBar.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;

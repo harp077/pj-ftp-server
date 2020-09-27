@@ -26,18 +26,19 @@ public class Log_Thread extends Thread {
             synchronized (this) {
                 while (running == true) {
                     try {
-                        String textLine;
-                        FileReader fr = new FileReader(logFile);
-                        BufferedReader reader = new BufferedReader(fr);
-                        while ((textLine = reader.readLine()) != null) {
+                        //String textLine;
+                        FileReader freader = new FileReader(logFile);
+                        BufferedReader breader = new BufferedReader(freader);
+                        //while ((textLine = reader.readLine()) != null) {
+                        while ( breader.readLine() != null) {    
                             //textLine = reader.readLine();
-                            taLog.read(reader, "taLogArea");
+                            taLog.read(breader, "taLogArea");
                         }
                     } catch (IOException ioe) {
                         System.err.println(ioe);
                     }
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(999);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Log_Thread.class.getName()).log(Level.SEVERE, null, ex);
                     }
