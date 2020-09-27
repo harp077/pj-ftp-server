@@ -58,7 +58,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static Map<String, String> argsHM = new HashMap<String, String>();
     public static Thread Log_Thread;
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.3, build 27-09-2020";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.4, build 27-09-2020";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -468,39 +468,40 @@ public class PjFtpServer extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                if (args.length == 0) {
-                    frame = new PjFtpServer();
-                    frame.InstallLF();
-                    frame.setLF(frame);
-                    frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
-                    JFrame.setDefaultLookAndFeelDecorated(true);
-                    JDialog.setDefaultLookAndFeelDecorated(true);
-                    JOptionPane.setRootFrame(frame);
-                    frame.setSize(FW, FH);
-                    frame.setLocation(200, 200);
-                    frame.setResizable(true);
-                    frame.setVisible(true);
+        if (args.length == 0) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {                    
+                frame = new PjFtpServer();
+                frame.InstallLF();
+                frame.setLF(frame);
+                frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
+                JFrame.setDefaultLookAndFeelDecorated(true);
+                JDialog.setDefaultLookAndFeelDecorated(true);
+                JOptionPane.setRootFrame(frame);
+                frame.setSize(FW, FH);
+                frame.setLocation(200, 200);
+                frame.setResizable(true);
+                frame.setVisible(true);
+            }});
+        }
+        if (args.length > 0) {
+            Arrays.stream(args)
+                .forEach(x -> { argsHM.put(x.split("=")[0].toString(), x.split("=")[1].toString()); });
+                System.out.println(argsHM);
+                String pwd="";
+                if (argsHM.get("user").toLowerCase().trim().equals("anonymous")) {
+                    pwd="jer@sey.com";
+                    argsHM.put("passw", pwd);
                 }
-                if (args.length > 0) {
-                    Arrays.stream(args)
-                        .forEach(x -> { argsHM.put(x.split("=")[0].toString(), x.split("=")[1].toString()); });
-                    System.out.println(argsHM);
-                    String pwd="";
-                    if (argsHM.get("user").toLowerCase().trim().equals("anonymous")) {
-                        pwd="jer@sey.com";
-                        argsHM.put("passw", pwd);
-                    }
-                    System.out.println(argsHM);                    
-                    try {
-                        startServer(args, argsHM.get("port").trim(), argsHM.get("user").trim(), argsHM.get("passw").trim(), argsHM.get("folder").trim());
-                    } catch (FtpException | FtpServerConfigurationException ex) {
-                        java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                    }
+                System.out.println(argsHM);                    
+                try {
+                    startServer(args, argsHM.get("port").trim(), argsHM.get("user").trim(), argsHM.get("passw").trim(), argsHM.get("folder").trim());
+                } catch (FtpException | FtpServerConfigurationException ex) {
+                    java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 }
-            }
-        });
+        }
+            //}
+        //});
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
