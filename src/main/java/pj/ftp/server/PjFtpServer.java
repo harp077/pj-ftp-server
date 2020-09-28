@@ -56,7 +56,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static Thread Log_Thread;
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.5, build 28-09-2020";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.6, build 28-09-2020";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -497,6 +497,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             });
         }
         if (args.length > 0) {
+            try {
             Arrays.stream(args)
                 .forEach(x -> { argsHM.put(x.split("=")[0].toString(), x.split("=")[1].toString()); });
                 System.out.println(argsHM);
@@ -515,6 +516,13 @@ public class PjFtpServer extends javax.swing.JFrame {
                 } catch (FtpException | FtpServerConfigurationException ex) {
                     java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 }
+            } catch (NullPointerException ne) {
+                System.out.println("NOT run !\nSome of parameters not given !");
+                System.out.println("Examples of use:");
+                System.out.println("java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=root passw=root");
+                System.out.println("java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=anonymous"); 
+                System.out.println("Anonymous mode not need passw parameter."); 
+            }
         }
             //}
         //});
