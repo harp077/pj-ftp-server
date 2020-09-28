@@ -76,8 +76,16 @@
                 <Property name="text" type="java.lang.String" value="Listen IP: "/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tfListenIP">
+            <Component class="javax.swing.JComboBox" name="comboListenIP">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="1">
+                    <StringItem index="0" value="127.0.0.1"/>
+                  </StringArray>
+                </Property>
+              </Properties>
               <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
               </AuxValues>
             </Component>

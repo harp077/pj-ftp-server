@@ -3,11 +3,16 @@ package pj.ftp.server;
 import java.awt.event.ItemEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -55,8 +60,9 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static Map<String, String> argsHM = new HashMap<String, String>();
     public static Thread Log_Thread;
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
+    public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.6, build 28-09-2020";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.7, build 28-09-2020";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -70,6 +76,24 @@ public class PjFtpServer extends javax.swing.JFrame {
         ImageIcon icone = new ImageIcon(getClass().getResource("/img/top-frame-triangle-16.png"));
         this.setIconImage(icone.getImage());
         this.setTitle(zagolovok);
+        Enumeration<NetworkInterface> enumerationNI = null;
+        try {
+            enumerationNI = NetworkInterface.getNetworkInterfaces();
+            int j=1;
+            while (enumerationNI.hasMoreElements()) {
+                NetworkInterface ni = enumerationNI.nextElement();
+                Enumeration<InetAddress> niInetAddr = ni.getInetAddresses();
+                while (niInetAddr.hasMoreElements()) {
+                    InetAddress ia = niInetAddr.nextElement();
+                    listListenIP.add(ia.getHostAddress());
+                }
+                j++;
+            }
+        } catch (SocketException | NullPointerException ex) {
+            Logger.getLogger(PjFtpServer.class.getName()).log(Level.ERROR, null, ex);
+        } 
+        this.comboListenIP.setModel(new DefaultComboBoxModel<>(listListenIP.stream().toArray(String[]::new))); 
+        this.comboListenIP.setEditable(false);
     }
 
     private synchronized static void startServer(String args[], String tcpPort, String login, String password, String folder, String listenIP) throws FtpException, FtpServerConfigurationException {
@@ -161,7 +185,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         tfPassw.setEditable(sset);
         tfPort.setEditable(sset);
         tfFolder.setEditable(sset);
-        tfListenIP.setEditable(sset);
+        comboListenIP.setEnabled(sset);
         checkBoxAnonymous.setEnabled(sset);
         btnSelectFolder.setEnabled(sset);
         if (checkBoxAnonymous.isSelected()) {
@@ -178,7 +202,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar1 = new javax.swing.JToolBar();
         jSeparator5 = new javax.swing.JToolBar.Separator();
         jLabel4 = new javax.swing.JLabel();
-        tfListenIP = new javax.swing.JTextField();
+        comboListenIP = new javax.swing.JComboBox<>();
         jSeparator12 = new javax.swing.JToolBar.Separator();
         jLabel1 = new javax.swing.JLabel();
         tfPort = new javax.swing.JTextField();
@@ -226,7 +250,9 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jLabel4.setText("Listen IP: ");
         jToolBar1.add(jLabel4);
-        jToolBar1.add(tfListenIP);
+
+        comboListenIP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "127.0.0.1" }));
+        jToolBar1.add(comboListenIP);
         jToolBar1.add(jSeparator12);
 
         jLabel1.setText("Port: ");
@@ -386,7 +412,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             btnToggleRunStop.setSelected(false);
             return;
         }
-        if (!ipv.isValid(tfListenIP.getText().trim()))  {
+        if (!ipv.isValid(comboListenIP.getSelectedItem().toString().trim()))  {
             JOptionPane.showMessageDialog(frame, "Wrong listen IP-address !", "Error", JOptionPane.ERROR_MESSAGE);
             btnToggleRunStop.setSelected(false);
             return;            
@@ -406,7 +432,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         }
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             try {
-                startServer(new String[0], tfPort.getText().trim(), tfUser.getText().trim(), tfPassw.getText().trim(), tfFolder.getText().trim(), tfListenIP.getText().trim());
+                startServer(new String[0], tfPort.getText().trim(), tfUser.getText().trim(), tfPassw.getText().trim(), tfFolder.getText().trim(), comboListenIP.getSelectedItem().toString().trim());
                 btnToggleRunStop.setIcon(iconOf);
                 btnToggleRunStop.setText("Stop server");
                 setBooleanBtnTf(false);
@@ -535,6 +561,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static javax.swing.JButton btnSelectFolder;
     public static javax.swing.JToggleButton btnToggleRunStop;
     public static javax.swing.JCheckBox checkBoxAnonymous;
+    public static javax.swing.JComboBox<String> comboListenIP;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -559,7 +586,6 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar jToolBar2;
     public static javax.swing.JTextArea taLog;
     public static javax.swing.JTextField tfFolder;
-    public static javax.swing.JTextField tfListenIP;
     public static javax.swing.JTextField tfPassw;
     public static javax.swing.JTextField tfPort;
     public static javax.swing.JTextField tfUser;
