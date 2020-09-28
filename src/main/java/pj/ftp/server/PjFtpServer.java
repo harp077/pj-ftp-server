@@ -52,7 +52,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     //public static java.util.logging.Logger jul;
     public static org.apache.log4j.Logger j4log;
     public static PjFtpServer frame;
-    public static int FW = 700;
+    public static int FW = 900;
     public static int FH = 400;
     //public static String ftpFolder;
     public static List<String> lookAndFeelsDisplay = new ArrayList<>();
@@ -62,7 +62,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
     //public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.7, build 28-09-2020";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.8, build 28-09-2020";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -93,6 +93,10 @@ public class PjFtpServer extends javax.swing.JFrame {
                 Enumeration<InetAddress> niInetAddr = ni.getInetAddresses();
                 while (niInetAddr.hasMoreElements()) {
                     InetAddress ia = niInetAddr.nextElement();
+                    if (ia.getHostAddress().contains("%")) {
+                        listListenIP.add(StringUtils.substringBefore(ia.getHostAddress(), "%"));
+                        continue;
+                    }
                     listListenIP.add(ia.getHostAddress());
                 }
                 j++;
