@@ -32,7 +32,6 @@ import org.apache.ftpserver.ftplet.Authority;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.ListenerFactory;
-import org.apache.ftpserver.message.MessageResource;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
 import org.apache.ftpserver.usermanager.impl.ConcurrentLoginPermission;
@@ -48,7 +47,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static FtpServer server;
     public static int MAX_CONCURRENT_LOGINS = 11;
     public static int MAX_CONCURRENT_LOGINS_PER_IP = 11;
-    public static MessageResource mrLog;
+    //public static MessageResource mrLog;
     //public static java.util.logging.Logger jul;
     public static org.apache.log4j.Logger j4log;
     public static PjFtpServer frame;
@@ -60,7 +59,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static Map<String, String> argsHM = new HashMap<String, String>();
     public static Thread Log_Thread;
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
-    public static List<String> listListenIP = new ArrayList<>();
+    //public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
     public static String zagolovok = " Pure Java FTP Server, v1.0.7, build 28-09-2020";
 
@@ -76,6 +75,12 @@ public class PjFtpServer extends javax.swing.JFrame {
         ImageIcon icone = new ImageIcon(getClass().getResource("/img/top-frame-triangle-16.png"));
         this.setIconImage(icone.getImage());
         this.setTitle(zagolovok);
+        this.comboListenIP.setModel(new DefaultComboBoxModel<>(listLocalIpAddr().stream().toArray(String[]::new))); 
+        this.comboListenIP.setEditable(false);
+    }
+    
+    public List<String> listLocalIpAddr () {
+        List<String> listListenIP = new ArrayList<>();
         Enumeration<NetworkInterface> enumerationNI = null;
         try {
             enumerationNI = NetworkInterface.getNetworkInterfaces();
@@ -91,9 +96,8 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         } catch (SocketException | NullPointerException ex) {
             Logger.getLogger(PjFtpServer.class.getName()).log(Level.ERROR, null, ex);
-        } 
-        this.comboListenIP.setModel(new DefaultComboBoxModel<>(listListenIP.stream().toArray(String[]::new))); 
-        this.comboListenIP.setEditable(false);
+        }  
+        return listListenIP;
     }
 
     private synchronized static void startServer(String args[], String tcpPort, String login, String password, String folder, String listenIP) throws FtpException, FtpServerConfigurationException {
@@ -120,6 +124,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         ListenerFactory listenerFactory = new ListenerFactory();
         listenerFactory.setPort(Integer.parseInt(tcpPort));
         listenerFactory.setServerAddress(listenIP);
+        //listenerFactory.setIdleTimeout(999);
 
         FtpServerFactory factory = new FtpServerFactory();
         factory.setUserManager(userManager);
@@ -127,10 +132,12 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         ConnectionConfigFactory configFactory = new ConnectionConfigFactory();
         //configFactory.setAnonymousLoginEnabled(true);
-        configFactory.setMaxThreads(11);
+        //configFactory.setMaxThreads(12);
+        //configFactory.setMaxAnonymousLogins(11);
+        //configFactory.setMaxLogins(11);
         factory.setConnectionConfig(configFactory.createConnectionConfig());
-        mrLog = factory.getMessageResource();
-        Map<String, String> hmLog = mrLog.getMessages("INFO");
+        //mrLog = factory.getMessageResource();
+        //Map<String, String> hmLog = mrLog.getMessages("INFO");
 
         server = factory.createServer();
         server.start();
@@ -524,7 +531,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         }
         if (args.length > 0) {
             try {
-            Arrays.stream(args)
+                Arrays.stream(args)
                 .forEach(x -> { argsHM.put(x.split("=")[0].toString(), x.split("=")[1].toString()); });
                 System.out.println(argsHM);
                 String pwd="";
