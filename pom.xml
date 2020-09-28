@@ -65,6 +65,12 @@
         </dependency> 
         
         <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.7</version>
+        </dependency>        
+        
+        <dependency>
             <groupId>de.muntjak</groupId>
             <artifactId>tinylaf</artifactId>
             <version>1.4.0</version>
