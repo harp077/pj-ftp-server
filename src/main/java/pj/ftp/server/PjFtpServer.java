@@ -1,5 +1,6 @@
 package pj.ftp.server;
 
+import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -77,6 +78,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.setTitle(zagolovok);
         this.comboListenIP.setModel(new DefaultComboBoxModel<>(listLocalIpAddr().stream().toArray(String[]::new))); 
         this.comboListenIP.setEditable(false);
+        this.taLog.setBackground(Color.BLACK);
+        this.taLog.setForeground(Color.CYAN);
     }
     
     public List<String> listLocalIpAddr () {
@@ -432,6 +435,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                 btnToggleRunStop.setIcon(iconOn);
                 btnToggleRunStop.setText("Run server");
                 setBooleanBtnTf(true);
+                taLog.grabFocus();//.setFocusable(true);
                 frame.setTitle(zagolovok + ", server stop");
                 j4log.log(Level.INFO, "pj-ftp-server stop");
                 return;
