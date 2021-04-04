@@ -62,7 +62,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
     //public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.21, build 04-04-2021";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.22, build 04-04-21";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -475,9 +475,14 @@ public class PjFtpServer extends javax.swing.JFrame {
 
     private void btnAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutActionPerformed
         //changeLF();
-        String msg = " PJ-FTP-SERVER: "
-                + "\n Free portable cross-platform"
-                + "\n Pure Java FTP server. "
+        String msg = " PJ-FTP-SERVER: Pure Java FTP server. Free portable cross-platform."
+                + "\n Run as root (Linux) or admin (Windows) !"
+                + "\n 1) Can run in GUI-mode - without cmd arguments:" 
+                + "\n       java -jar pj-ftp-server.jar"
+                + "\n 2) Can run without GUI in cmd-mode with cmd arguments: "
+                + "\n       java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=root passw=root   "
+                + "\n 3) For anonymous-mode in cmd-mode without GUI passw-parameter not need: "
+                + "\n       java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=anonymous "                
                 + "\n Create by Roman Koldaev, "
                 + "\n Saratov city, Russia. "
                 + "\n mail: harp07@mail.ru "
@@ -485,7 +490,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                 + "\n GitHub: https://github.com/harp077/ "
                 + "\n Need JRE-1.8."; 
         ImageIcon icone = new ImageIcon(getClass().getResource("/img/logo/ftp-green-logo-128.png"));
-        JOptionPane.showMessageDialog(frame, msg, "About", JOptionPane.INFORMATION_MESSAGE, icone);
+        JOptionPane.showMessageDialog(frame, msg, "About " + zagolovok, JOptionPane.INFORMATION_MESSAGE, icone);
     }//GEN-LAST:event_btnAboutActionPerformed
 
     private void btnClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearLogActionPerformed
