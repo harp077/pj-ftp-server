@@ -62,7 +62,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
     //public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.19, build 04-04-2021";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.20, build 04-04-2021";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
