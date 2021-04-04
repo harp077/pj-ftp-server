@@ -62,7 +62,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
     //public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.8, build 28-09-2020";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.9, build 04-04-2021";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -259,7 +259,6 @@ public class PjFtpServer extends javax.swing.JFrame {
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         jToolBar1.setFloatable(false);
-        jToolBar1.setRollover(true);
         jToolBar1.add(jSeparator5);
 
         jLabel4.setText("Listen IP: ");
@@ -329,7 +328,6 @@ public class PjFtpServer extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         jToolBar2.setFloatable(false);
-        jToolBar2.setRollover(true);
 
         btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/info-cyan-16.png"))); // NOI18N
         btnAbout.setText(" About");
