@@ -64,7 +64,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
     //public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.23, build 05-04-21";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.24, build 05-04-21";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -587,8 +587,8 @@ public class PjFtpServer extends javax.swing.JFrame {
                 try {
                     startServer(args, argsHM.get("port").trim(), argsHM.get("user").trim(), argsHM.get("passw").trim(), argsHM.get("folder").trim(), argsHM.get("listenip").trim());
                 } catch (FtpException | FtpServerConfigurationException ex) {
-                    //java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                    System.out.println("NOT run !\nSome of parameters wrong !");
+                    java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    System.out.println("\nNOT run !\nSome of parameters wrong !");
                     useExamples();                    
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException ne) {
