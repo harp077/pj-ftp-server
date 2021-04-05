@@ -5,6 +5,7 @@ import java.awt.event.ItemEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.validator.routines.InetAddressValidator;
 import org.apache.ftpserver.ConnectionConfigFactory;
 import org.apache.ftpserver.FtpServer;
@@ -62,7 +64,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
     //public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.22, build 04-04-21";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.23, build 05-04-21";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -81,6 +83,22 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.taLog.setBackground(Color.BLACK);
         this.taLog.setForeground(Color.CYAN);
     }
+    
+    public static boolean checkTcpPort(String tcpPort) {
+        if (NumberUtils.isParsable(tcpPort)) {
+            long port=Long.parseLong(tcpPort);
+            if (port > 0 && port < 65536)
+                return true;
+        }
+        return false;
+    }
+    
+    public static void useExamples() {
+        System.out.println("Examples of use:");
+        System.out.println("java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=root passw=root");
+        System.out.println("java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=anonymous"); 
+        System.out.println("Anonymous mode not need passw parameter.");
+    }    
     
     public List<String> listLocalIpAddr () {
         List<String> listListenIP = new ArrayList<>();
@@ -419,7 +437,12 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnQuitActionPerformed
 
     private void btnToggleRunStopItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnToggleRunStopItemStateChanged
-        if (!StringUtils.isNumeric(tfPort.getText()) || tfUser.getText().isEmpty() || tfPassw.getText().isEmpty() || tfFolder.getText().isEmpty()) {
+        if (!checkTcpPort(tfPort.getText().trim())) {
+            JOptionPane.showMessageDialog(frame, "Port wrong !", "Error", JOptionPane.ERROR_MESSAGE); 
+            btnToggleRunStop.setSelected(false);
+            return;
+        }
+        if (tfUser.getText().isEmpty() || tfPassw.getText().isEmpty() || tfFolder.getText().isEmpty()) {
             JOptionPane.showMessageDialog(frame, "Some wrong parameters !", "Error", JOptionPane.ERROR_MESSAGE);
             btnToggleRunStop.setSelected(false);
             return;
@@ -552,20 +575,25 @@ public class PjFtpServer extends javax.swing.JFrame {
                 }
                 System.out.println(argsHM); 
                 if (!ipv.isValid(argsHM.get("listenip").trim()))  {
-                    System.out.println("Wrong listen IP ! Exit !"); 
+                    System.out.println("Wrong listen IP ! \nExit !"); 
+                    useExamples();
                     return;
                 }
+                if (!checkTcpPort(argsHM.get("port").trim())) {
+                    System.out.println("Port Wrong ! \nExit !"); 
+                    useExamples();
+                    return;
+                }                
                 try {
                     startServer(args, argsHM.get("port").trim(), argsHM.get("user").trim(), argsHM.get("passw").trim(), argsHM.get("folder").trim(), argsHM.get("listenip").trim());
                 } catch (FtpException | FtpServerConfigurationException ex) {
-                    java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    //java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    System.out.println("NOT run !\nSome of parameters wrong !");
+                    useExamples();                    
                 }
-            } catch (NullPointerException ne) {
+            } catch (NullPointerException | ArrayIndexOutOfBoundsException ne) {
                 System.out.println("NOT run !\nSome of parameters not given !");
-                System.out.println("Examples of use:");
-                System.out.println("java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=root passw=root");
-                System.out.println("java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=anonymous"); 
-                System.out.println("Anonymous mode not need passw parameter."); 
+                useExamples();
             }
         }
             //}
