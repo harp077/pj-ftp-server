@@ -64,7 +64,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
     //public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.26, build 06-04-21";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.27, build 06-04-21";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -232,6 +232,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
+        jSeparator9 = new javax.swing.JToolBar.Separator();
         jLabel4 = new javax.swing.JLabel();
         comboListenIP = new javax.swing.JComboBox<>();
         jSeparator12 = new javax.swing.JToolBar.Separator();
@@ -245,13 +246,17 @@ public class PjFtpServer extends javax.swing.JFrame {
         tfPassw = new javax.swing.JTextField();
         jSeparator4 = new javax.swing.JToolBar.Separator();
         checkBoxAnonymous = new javax.swing.JCheckBox();
+        jSeparator11 = new javax.swing.JToolBar.Separator();
         btnToggleRunStop = new javax.swing.JToggleButton();
+        jSeparator7 = new javax.swing.JToolBar.Separator();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taLog = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jToolBar2 = new javax.swing.JToolBar();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
         btnSelectFolder = new javax.swing.JButton();
+        jSeparator6 = new javax.swing.JToolBar.Separator();
         tfFolder = new javax.swing.JTextField();
         jSeparator10 = new javax.swing.JToolBar.Separator();
         btnClearLog = new javax.swing.JButton();
@@ -259,6 +264,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         btnAbout = new javax.swing.JButton();
         jSeparator13 = new javax.swing.JToolBar.Separator();
         btnQuit = new javax.swing.JButton();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("pj-ftp-server");
@@ -272,6 +278,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         jToolBar1.setFloatable(false);
+        jToolBar1.add(jSeparator9);
 
         jLabel4.setText("Listen IP: ");
         jToolBar1.add(jLabel4);
@@ -307,6 +314,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(checkBoxAnonymous);
+        jToolBar1.add(jSeparator11);
 
         btnToggleRunStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/go-green-krug-16.png"))); // NOI18N
         btnToggleRunStop.setText("Run server ");
@@ -318,6 +326,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(btnToggleRunStop);
+        jToolBar1.add(jSeparator7);
 
         jPanel1.add(jToolBar1, java.awt.BorderLayout.CENTER);
 
@@ -338,6 +347,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         jToolBar2.setFloatable(false);
+        jToolBar2.add(jSeparator3);
 
         btnSelectFolder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/folder-green-16.png"))); // NOI18N
         btnSelectFolder.setText("Select Folder: ");
@@ -350,6 +360,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         });
         jToolBar2.add(btnSelectFolder);
+        jToolBar2.add(jSeparator6);
 
         tfFolder.setText("/tmp");
         jToolBar2.add(tfFolder);
@@ -391,6 +402,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         });
         jToolBar2.add(btnQuit);
+        jToolBar2.add(jSeparator5);
 
         jPanel3.add(jToolBar2, java.awt.BorderLayout.CENTER);
 
@@ -611,11 +623,17 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator10;
+    private javax.swing.JToolBar.Separator jSeparator11;
     private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JToolBar.Separator jSeparator6;
+    private javax.swing.JToolBar.Separator jSeparator7;
     private javax.swing.JToolBar.Separator jSeparator8;
+    private javax.swing.JToolBar.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     public static javax.swing.JTextArea taLog;
