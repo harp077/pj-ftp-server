@@ -64,7 +64,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
     //public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.27, build 06-04-21";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.28, build 29-06-21";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -504,7 +504,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                 + "\n Run as root (Linux) or admin (Windows) !"
                 + "\n 1) Fully multi-threaded."
                 + "\n 2) Multi platform support."
-                + "\n 3) Very high upload/download speed - up to 900 Mbps on 1Gbps channel when used SSD-drives on both upload/download sides.    "               
+                + "\n 3) High upload/download speed - up to 800 Mbit/s (100 Mbyte/s) on 1Gbit/s channel when used SSD-drives on both upload/download sides. "               
                 + "\n 4) Can run in GUI-mode - without CMD arguments:" 
                 + "\n       # java -jar pj-ftp-server.jar"
                 + "\n 5) Can run without GUI in CMD-mode with CMD arguments: "
