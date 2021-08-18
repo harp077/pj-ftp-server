@@ -27,6 +27,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.validator.routines.InetAddressValidator;
+import org.apache.ftpserver.ConnectionConfig;
 import org.apache.ftpserver.ConnectionConfigFactory;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerConfigurationException;
@@ -50,6 +51,8 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static FtpServer server;
     public static int MAX_CONCURRENT_LOGINS = 11;
     public static int MAX_CONCURRENT_LOGINS_PER_IP = 11;
+    public static int MAX_IDLE_TIME = 9999;
+    public static int MAX_THREADS_LOGINS = 128;
     //public static MessageResource mrLog;
     //public static java.util.logging.Logger jul;
     public static org.apache.log4j.Logger j4log;
@@ -64,7 +67,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
     //public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.28, build 29-06-21";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.29, build 18-08-21";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -144,30 +147,39 @@ public class PjFtpServer extends javax.swing.JFrame {
         authorities.add(new ConcurrentLoginPermission(MAX_CONCURRENT_LOGINS, MAX_CONCURRENT_LOGINS_PER_IP));
         authorities.add(new TransferRatePermission(Integer.MAX_VALUE, Integer.MAX_VALUE));
         user.setAuthorities(authorities);
+        user.setMaxIdleTime(MAX_IDLE_TIME);
         userManager.save(user);
 
         ListenerFactory listenerFactory = new ListenerFactory();
         listenerFactory.setPort(Integer.parseInt(tcpPort));
         listenerFactory.setServerAddress(listenIP);
-        //listenerFactory.setIdleTimeout(999);
+        listenerFactory.setIdleTimeout(MAX_IDLE_TIME);
 
-        FtpServerFactory factory = new FtpServerFactory();
-        factory.setUserManager(userManager);
-        factory.addListener("default", listenerFactory.createListener());
+        FtpServerFactory ftpServerFactory = new FtpServerFactory();
+        ftpServerFactory.setUserManager(userManager);
+        ftpServerFactory.addListener("default", listenerFactory.createListener());
 
         ConnectionConfigFactory configFactory = new ConnectionConfigFactory();
         //configFactory.setAnonymousLoginEnabled(true);
-        //configFactory.setMaxThreads(12);
-        //configFactory.setMaxAnonymousLogins(11);
-        //configFactory.setMaxLogins(11);
-        factory.setConnectionConfig(configFactory.createConnectionConfig());
+        configFactory.setMaxThreads(MAX_THREADS_LOGINS);
+        configFactory.setMaxAnonymousLogins(MAX_THREADS_LOGINS);
+        configFactory.setMaxLogins(MAX_THREADS_LOGINS);
+        ConnectionConfig connectionConfig = configFactory.createConnectionConfig();
+        ftpServerFactory.setConnectionConfig(connectionConfig);
         //mrLog = factory.getMessageResource();
         //Map<String, String> hmLog = mrLog.getMessages("INFO");
 
-        server = factory.createServer();
+        server = ftpServerFactory.createServer();
         server.start();
         //jul.log(Level.SEVERE, "oppanki");
         j4log.log(Level.INFO, "pj-ftp-server running");
+        j4log.log(Level.INFO, "Max Threads = "+connectionConfig.getMaxThreads());
+        j4log.log(Level.INFO, "Anonymous Login Enabled = "+connectionConfig.isAnonymousLoginEnabled());
+        j4log.log(Level.INFO, "Max Anonymous Logins = "+connectionConfig.getMaxAnonymousLogins());
+        j4log.log(Level.INFO, "Max Logins = "+connectionConfig.getMaxLogins());
+        j4log.log(Level.INFO, "Server Address = "+listenerFactory.getServerAddress());
+        j4log.log(Level.INFO, "Server Port = "+listenerFactory.getPort());
+        j4log.log(Level.INFO, "Server Idle TimeOut = "+listenerFactory.getIdleTimeout());
         running = true;
         if (args.length == 0) {
             Log_Thread = new Log_Thread("log/app.log");
