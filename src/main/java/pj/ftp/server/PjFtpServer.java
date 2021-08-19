@@ -138,12 +138,17 @@ public class PjFtpServer extends javax.swing.JFrame {
         //jul.log(Level.SEVERE, "oppanki");
         j4log.log(Level.INFO, "pj-ftp-server running");
         j4log.log(Level.INFO, "Max Threads = "+connectionConfig.getMaxThreads());
-        j4log.log(Level.INFO, "Anonymous Login Enabled = "+connectionConfig.isAnonymousLoginEnabled());
-        j4log.log(Level.INFO, "Max Anonymous Logins = "+connectionConfig.getMaxAnonymousLogins());
+        if (tfUser.getText().trim().equals("anonymous")) {
+            j4log.log(Level.INFO, "Anonymous Login Enabled by default = "+connectionConfig.isAnonymousLoginEnabled());
+            j4log.log(Level.INFO, "Max Anonymous Logins = "+connectionConfig.getMaxAnonymousLogins());
+        }
         j4log.log(Level.INFO, "Max Logins = "+connectionConfig.getMaxLogins());
+        j4log.log(Level.INFO, "Max Logins per IP = "+MAX_CONCURRENT_LOGINS_PER_IP);
         j4log.log(Level.INFO, "Server Address = "+listenerFactory.getServerAddress());
         j4log.log(Level.INFO, "Server Port = "+listenerFactory.getPort());
         j4log.log(Level.INFO, "Server Idle TimeOut = "+listenerFactory.getIdleTimeout());
+        j4log.log(Level.INFO, "Writable = "+writeAccess);
+        j4log.log(Level.INFO, "Max speed = "+MAX_SPEED/1000000 + " Mbit/s");
         running = true;
         if (args.length == 0) {
             Log_Thread = new Log_Thread("log/app.log");

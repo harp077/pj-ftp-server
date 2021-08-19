@@ -27,7 +27,7 @@ public class ActionsFacade {
     public static List<String> lookAndFeelsRealNames = new ArrayList<>(); 
     public static Map<String, Integer> speedMap = new HashMap<String, Integer>();
     public static String[] loginsArray = {"1","10","100"};
-    public static String[] loginsArrayPerIP = {"1","2","3","4","5","6","7","8","9"};
+    public static String[] loginsArrayPerIP = {"1","2","3","4","5","6","7","8"};
     public static String[] writableArray = {"true","false"};
     
     static {
