@@ -42,7 +42,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static int MAX_CONCURRENT_LOGINS_PER_IP = 11;
     public static int MAX_IDLE_TIME = 9999;
     public static int MAX_THREADS_LOGINS = 128;
-    public static int MAX_SPEED = Integer.MAX_VALUE;
+    public static int MAX_SPEED;// = Integer.MAX_VALUE;99_999;//Integer.MAX_VALUE; = in Kbit/sek !!
     public static Boolean writeAccess = true;
     //public static MessageResource mrLog;
     //public static java.util.logging.Logger jul;
@@ -65,7 +65,9 @@ public class PjFtpServer extends javax.swing.JFrame {
         ImageIcon icone = new ImageIcon(getClass().getResource("/img/top-frame-triangle-16.png"));
         this.setIconImage(icone.getImage());
         this.setTitle(ICFG.zagolovok);
-        this.comboListenIP.setModel(new DefaultComboBoxModel<>(Actions.listLocalIpAddr().stream().toArray(String[]::new))); 
+        this.comboSpeed.setModel(new DefaultComboBoxModel<>(ActionsFacade.speedMap.keySet().stream().sorted().toArray(String[]::new)));
+        this.comboSpeed.setEditable(false);
+        this.comboListenIP.setModel(new DefaultComboBoxModel<>(ActionsFacade.listLocalIpAddr().stream().toArray(String[]::new))); 
         this.comboListenIP.setEditable(false);
         this.taLog.setBackground(Color.BLACK);
         this.taLog.setForeground(Color.CYAN);
@@ -152,6 +154,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         tfPort.setEditable(sset);
         tfFolder.setEditable(sset);
         comboListenIP.setEnabled(sset);
+        comboSpeed.setEnabled(sset);
         checkBoxAnonymous.setEnabled(sset);
         btnSelectFolder.setEnabled(sset);
         if (checkBoxAnonymous.isSelected()) {
@@ -183,6 +186,10 @@ public class PjFtpServer extends javax.swing.JFrame {
         jSeparator11 = new javax.swing.JToolBar.Separator();
         btnToggleRunStop = new javax.swing.JToggleButton();
         jSeparator7 = new javax.swing.JToolBar.Separator();
+        jToolBar3 = new javax.swing.JToolBar();
+        jSeparator14 = new javax.swing.JToolBar.Separator();
+        jLabel5 = new javax.swing.JLabel();
+        comboSpeed = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taLog = new javax.swing.JTextArea();
@@ -263,6 +270,22 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar1.add(jSeparator7);
 
         jPanel1.add(jToolBar1, java.awt.BorderLayout.CENTER);
+
+        jToolBar3.setFloatable(false);
+        jToolBar3.add(jSeparator14);
+
+        jLabel5.setText("MAX speed: ");
+        jToolBar3.add(jLabel5);
+
+        comboSpeed.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboSpeed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboSpeedActionPerformed(evt);
+            }
+        });
+        jToolBar3.add(comboSpeed);
+
+        jPanel1.add(jToolBar3, java.awt.BorderLayout.PAGE_START);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
@@ -373,7 +396,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnQuitActionPerformed
 
     private void btnToggleRunStopItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnToggleRunStopItemStateChanged
-        if (!Actions.checkTcpPort(tfPort.getText().trim())) {
+        if (!ActionsFacade.checkTcpPort(tfPort.getText().trim())) {
             JOptionPane.showMessageDialog(frame, "Port wrong !", "Error", JOptionPane.ERROR_MESSAGE); 
             btnToggleRunStop.setSelected(false);
             return;
@@ -433,7 +456,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSelectFolderActionPerformed
 
     private void btnAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutActionPerformed
-        Actions.about(new ImageIcon(getClass().getResource("/img/logo/ftp-green-logo-128.png")));
+        ActionsFacade.about(new ImageIcon(getClass().getResource("/img/logo/ftp-green-logo-128.png")));
     }//GEN-LAST:event_btnAboutActionPerformed
 
     private void btnClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearLogActionPerformed
@@ -454,6 +477,11 @@ public class PjFtpServer extends javax.swing.JFrame {
         }*/
     }//GEN-LAST:event_btnClearLogActionPerformed
 
+    private void comboSpeedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboSpeedActionPerformed
+        MAX_SPEED=ActionsFacade.speedMap.get(comboSpeed.getSelectedItem().toString());
+        System.out.println("max speed = "+MAX_SPEED);
+    }//GEN-LAST:event_comboSpeedActionPerformed
+
     public static void main(String args[]) {
         /*try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -470,8 +498,8 @@ public class PjFtpServer extends javax.swing.JFrame {
                 @Override
                 public void run() {                    
                     frame = new PjFtpServer();
-                    Actions.InstallLF();
-                    Actions.setLF(frame);
+                    ActionsFacade.InstallLF();
+                    ActionsFacade.setLF(frame);
                     frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
                     JFrame.setDefaultLookAndFeelDecorated(true);
                     JDialog.setDefaultLookAndFeelDecorated(true);
@@ -496,12 +524,12 @@ public class PjFtpServer extends javax.swing.JFrame {
                 System.out.println(argsHM); 
                 if (!ICFG.ipv.isValid(argsHM.get("listenip").trim()))  {
                     System.out.println("Wrong listen IP ! \nExit !"); 
-                    Actions.useExamples();
+                    ActionsFacade.useExamples();
                     return;
                 }
-                if (!Actions.checkTcpPort(argsHM.get("port").trim())) {
+                if (!ActionsFacade.checkTcpPort(argsHM.get("port").trim())) {
                     System.out.println("Port Wrong ! \nExit !"); 
-                    Actions.useExamples();
+                    ActionsFacade.useExamples();
                     return;
                 }                
                 try {
@@ -509,11 +537,11 @@ public class PjFtpServer extends javax.swing.JFrame {
                 } catch (FtpException | FtpServerConfigurationException ex) {
                     java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     System.out.println("\nNOT run !\nSome of parameters wrong !");
-                    Actions.useExamples();                    
+                    ActionsFacade.useExamples();                    
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException ne) {
                 System.out.println("NOT run !\nSome of parameters not given !");
-                Actions.useExamples();
+                ActionsFacade.useExamples();
             }
         }
             //}
@@ -528,10 +556,12 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static javax.swing.JToggleButton btnToggleRunStop;
     public static javax.swing.JCheckBox checkBoxAnonymous;
     public static javax.swing.JComboBox<String> comboListenIP;
+    public static javax.swing.JComboBox<String> comboSpeed;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -541,6 +571,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator11;
     private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
+    private javax.swing.JToolBar.Separator jSeparator14;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
@@ -551,6 +582,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
+    private javax.swing.JToolBar jToolBar3;
     public static javax.swing.JTextArea taLog;
     public static javax.swing.JTextField tfFolder;
     public static javax.swing.JTextField tfPassw;

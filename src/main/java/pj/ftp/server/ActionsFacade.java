@@ -6,7 +6,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -19,10 +21,20 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import static pj.ftp.server.PjFtpServer.frame;
 
-public class Actions {
+public class ActionsFacade {
     
     public static List<String> lookAndFeelsDisplay = new ArrayList<>();
-    public static List<String> lookAndFeelsRealNames = new ArrayList<>();  
+    public static List<String> lookAndFeelsRealNames = new ArrayList<>(); 
+    public static Map<String, Integer> speedMap = new HashMap<String, Integer>();
+    
+    static {
+        speedMap.put("1 Mbit/s", 1_000_000);
+        //speedMap.put("5 Mbit/s", 5_000_000);
+        speedMap.put("10 Mbit/s", 10_000_000);
+        //speedMap.put("50 Mbit/s", 50_000_000);
+        speedMap.put("100 Mbit/s", 100_000_000);
+        speedMap.put("1000 Mbit/s", 1000_000_000);
+    }
    
     public static boolean checkTcpPort(String tcpPort) {
         if (NumberUtils.isParsable(tcpPort)) {
@@ -55,7 +67,7 @@ public class Actions {
         try {
             UIManager.setLookAndFeel(ICFG.currentLAF);
         } catch (InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | ClassNotFoundException ex) {
-            Logger.getLogger(Actions.class.getName()).log(Level.ERROR, null, ex);
+            Logger.getLogger(ActionsFacade.class.getName()).log(Level.ERROR, null, ex);
         }
         SwingUtilities.updateComponentTreeUI(frame);
         //frame.pack();
@@ -81,7 +93,7 @@ public class Actions {
                 j++;
             }
         } catch (SocketException | NullPointerException ex) {
-            Logger.getLogger(Actions.class.getName()).log(Level.ERROR, null, ex);
+            Logger.getLogger(ActionsFacade.class.getName()).log(Level.ERROR, null, ex);
         }  
         return listListenIP;
     }    
