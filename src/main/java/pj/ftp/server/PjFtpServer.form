@@ -375,6 +375,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="tfFolder">
               <Properties>
+                <Property name="editable" type="boolean" value="false"/>
                 <Property name="text" type="java.lang.String" value="/tmp"/>
               </Properties>
               <AuxValues>

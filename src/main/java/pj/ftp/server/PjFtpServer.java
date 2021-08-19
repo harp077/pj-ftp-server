@@ -90,6 +90,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.comboListenIP.setEditable(false);
         this.taLog.setBackground(Color.BLACK);
         this.taLog.setForeground(Color.CYAN);
+        this.tfFolder.setEditable(false);
     }
 
     private synchronized static void startServer(String args[], String tcpPort, String login, String password, String folder, String listenIP) throws FtpException, FtpServerConfigurationException {
@@ -176,7 +177,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         tfUser.setEditable(sset);
         tfPassw.setEditable(sset);
         tfPort.setEditable(sset);
-        tfFolder.setEditable(sset);
+        //tfFolder.setEditable(sset);
         comboListenIP.setEnabled(sset);
         comboSpeed.setEnabled(sset);
         comboMaxLogins.setEnabled(sset);
@@ -395,6 +396,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2.add(btnSelectFolder);
         jToolBar2.add(jSeparator6);
 
+        tfFolder.setEditable(false);
         tfFolder.setText("/tmp");
         jToolBar2.add(tfFolder);
         jToolBar2.add(jSeparator10);
