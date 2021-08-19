@@ -39,11 +39,11 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static Boolean running = false;
     public static FtpServer server;
     public static int MAX_CONCURRENT_LOGINS = 11;
-    public static int MAX_CONCURRENT_LOGINS_PER_IP;// = 11;
+    public static int MAX_CONCURRENT_LOGINS_PER_IP = 11;
     public static int MAX_IDLE_TIME = 9999;
-    public static int MAX_THREADS_LOGINS;// = 128;
-    public static int MAX_SPEED;// = Integer.MAX_VALUE;99_999;//Integer.MAX_VALUE; = in Kbit/sek !!
-    public static Boolean writeAccess;// = true;
+    public static int MAX_THREADS_LOGINS = 128;
+    public static int MAX_SPEED = 1000_000_000;// = Integer.MAX_VALUE;99_999;//Integer.MAX_VALUE; = in Kbit/sek !!
+    public static Boolean writeAccess = true;
     //public static MessageResource mrLog;
     //public static java.util.logging.Logger jul;
     public static org.apache.log4j.Logger j4log;
@@ -139,7 +139,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         //jul.log(Level.SEVERE, "oppanki");
         j4log.log(Level.INFO, "pj-ftp-server running");
         j4log.log(Level.INFO, "Max Threads = "+connectionConfig.getMaxThreads());
-        if (tfUser.getText().trim().equals("anonymous")) {
+        if (args.length == 0 && tfUser.getText().trim().equals("anonymous")) {
             j4log.log(Level.INFO, "Anonymous Login Enabled by default = "+connectionConfig.isAnonymousLoginEnabled());
             j4log.log(Level.INFO, "Max Anonymous Logins = "+connectionConfig.getMaxAnonymousLogins());
         }
@@ -634,6 +634,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException ne) {
                 System.out.println("NOT run !\nSome of parameters not given !");
+                System.out.println("Exception = " + ne.toString());
                 ActionsFacade.useExamples();
             }
         }
