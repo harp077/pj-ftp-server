@@ -5,7 +5,6 @@ import java.awt.event.ItemEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -25,8 +24,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.validator.routines.InetAddressValidator;
 import org.apache.ftpserver.ConnectionConfig;
 import org.apache.ftpserver.ConnectionConfigFactory;
 import org.apache.ftpserver.FtpServer;
@@ -53,24 +50,16 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static int MAX_CONCURRENT_LOGINS_PER_IP = 11;
     public static int MAX_IDLE_TIME = 9999;
     public static int MAX_THREADS_LOGINS = 128;
-    public static int MAX_DOWNLOAD_SPEED = Integer.MAX_VALUE;
-    public static int MAX_UPLOAD_SPEED = Integer.MAX_VALUE;
+    public static int MAX_SPEED = Integer.MAX_VALUE;
     public static Boolean writeAccess = true;
     //public static MessageResource mrLog;
     //public static java.util.logging.Logger jul;
     public static org.apache.log4j.Logger j4log;
     public static PjFtpServer frame;
-    public static int FW = 900;
-    public static int FH = 400;
-    //public static String ftpFolder;
-    public static List<String> lookAndFeelsDisplay = new ArrayList<>();
-    public static List<String> lookAndFeelsRealNames = new ArrayList<>();
     public static Map<String, String> argsHM = new HashMap<String, String>();
     public static Thread Log_Thread;
-    private static InetAddressValidator ipv = InetAddressValidator.getInstance();
+
     //public static List<String> listListenIP = new ArrayList<>();
-    public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.30, build 19-08-21";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -83,52 +72,11 @@ public class PjFtpServer extends javax.swing.JFrame {
         initComponents();
         ImageIcon icone = new ImageIcon(getClass().getResource("/img/top-frame-triangle-16.png"));
         this.setIconImage(icone.getImage());
-        this.setTitle(zagolovok);
-        this.comboListenIP.setModel(new DefaultComboBoxModel<>(listLocalIpAddr().stream().toArray(String[]::new))); 
+        this.setTitle(ICFG.zagolovok);
+        this.comboListenIP.setModel(new DefaultComboBoxModel<>(Actions.listLocalIpAddr().stream().toArray(String[]::new))); 
         this.comboListenIP.setEditable(false);
         this.taLog.setBackground(Color.BLACK);
         this.taLog.setForeground(Color.CYAN);
-    }
-    
-    public static boolean checkTcpPort(String tcpPort) {
-        if (NumberUtils.isParsable(tcpPort)) {
-            long port=Long.parseLong(tcpPort);
-            if (port > 0 && port < 65536)
-                return true;
-        }
-        return false;
-    }
-    
-    public static void useExamples() {
-        System.out.println("Examples of use:");
-        System.out.println("java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=root passw=root");
-        System.out.println("java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=anonymous"); 
-        System.out.println("Anonymous mode not need passw parameter.");
-    }    
-    
-    public List<String> listLocalIpAddr () {
-        List<String> listListenIP = new ArrayList<>();
-        Enumeration<NetworkInterface> enumerationNI = null;
-        try {
-            enumerationNI = NetworkInterface.getNetworkInterfaces();
-            int j=1;
-            while (enumerationNI.hasMoreElements()) {
-                NetworkInterface ni = enumerationNI.nextElement();
-                Enumeration<InetAddress> niInetAddr = ni.getInetAddresses();
-                while (niInetAddr.hasMoreElements()) {
-                    InetAddress ia = niInetAddr.nextElement();
-                    if (ia.getHostAddress().contains("%")) {
-                        listListenIP.add(StringUtils.substringBefore(ia.getHostAddress(), "%"));
-                        continue;
-                    }
-                    listListenIP.add(ia.getHostAddress());
-                }
-                j++;
-            }
-        } catch (SocketException | NullPointerException ex) {
-            Logger.getLogger(PjFtpServer.class.getName()).log(Level.ERROR, null, ex);
-        }  
-        return listListenIP;
     }
 
     private synchronized static void startServer(String args[], String tcpPort, String login, String password, String folder, String listenIP) throws FtpException, FtpServerConfigurationException {
@@ -148,7 +96,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         List<Authority> authorities = new ArrayList<Authority>();
         if (writeAccess) authorities.add(new WritePermission());
         authorities.add(new ConcurrentLoginPermission(MAX_CONCURRENT_LOGINS, MAX_CONCURRENT_LOGINS_PER_IP));
-        authorities.add(new TransferRatePermission(MAX_DOWNLOAD_SPEED, MAX_UPLOAD_SPEED));
+        authorities.add(new TransferRatePermission(MAX_SPEED, MAX_SPEED));
         user.setAuthorities(authorities);
         user.setMaxIdleTime(MAX_IDLE_TIME);
         userManager.save(user);
@@ -189,14 +137,8 @@ public class PjFtpServer extends javax.swing.JFrame {
             try {
                 Log_Thread.start();
             } catch (IllegalThreadStateException itse) {}
-            frame.setTitle(zagolovok + ", server running");
+            frame.setTitle(ICFG.zagolovok + ", server running");
         }
-    }
-
-    public static void MyInstLF(String lf) {
-        //UIManager.installLookAndFeel(lf,lf);  
-        lookAndFeelsDisplay.add(lf);
-        lookAndFeelsRealNames.add(lf);
     }
 
     /*public void changeLF() {
@@ -214,17 +156,12 @@ public class PjFtpServer extends javax.swing.JFrame {
 
     public void setLF(JFrame frame) {
         try {
-            UIManager.setLookAndFeel(currentLAF);
+            UIManager.setLookAndFeel(ICFG.currentLAF);
         } catch (InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | ClassNotFoundException ex) {
             Logger.getLogger(this.getName()).log(Level.ERROR, null, ex);
         }
         SwingUtilities.updateComponentTreeUI(frame);
         //frame.pack();
-    }
-
-    public static void InstallLF() {
-        MyInstLF("javax.swing.plaf.metal.MetalLookAndFeel");
-        MyInstLF("de.muntjak.tinylookandfeel.TinyLookAndFeel");
     }
 
     private void setBooleanBtnTf(Boolean sset) {
@@ -454,7 +391,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnQuitActionPerformed
 
     private void btnToggleRunStopItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnToggleRunStopItemStateChanged
-        if (!checkTcpPort(tfPort.getText().trim())) {
+        if (!Actions.checkTcpPort(tfPort.getText().trim())) {
             JOptionPane.showMessageDialog(frame, "Port wrong !", "Error", JOptionPane.ERROR_MESSAGE); 
             btnToggleRunStop.setSelected(false);
             return;
@@ -464,7 +401,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             btnToggleRunStop.setSelected(false);
             return;
         }
-        if (!ipv.isValid(comboListenIP.getSelectedItem().toString().trim()))  {
+        if (!ICFG.ipv.isValid(comboListenIP.getSelectedItem().toString().trim()))  {
             JOptionPane.showMessageDialog(frame, "Wrong listen IP-address !", "Error", JOptionPane.ERROR_MESSAGE);
             btnToggleRunStop.setSelected(false);
             return;            
@@ -478,7 +415,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                 btnToggleRunStop.setText("Run server");
                 setBooleanBtnTf(true);
                 taLog.grabFocus();//.setFocusable(true);
-                frame.setTitle(zagolovok + ", server stop");
+                frame.setTitle(ICFG.zagolovok + ", server stop");
                 j4log.log(Level.INFO, "pj-ftp-server stop");
                 return;
             }
@@ -533,7 +470,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                 + "\n SourceForge: https://sf.net/u/harp07/profile/ "
                 + "\n GitHub: https://github.com/harp077/ "; 
         ImageIcon icone = new ImageIcon(getClass().getResource("/img/logo/ftp-green-logo-128.png"));
-        JOptionPane.showMessageDialog(frame, msg, "About " + zagolovok, JOptionPane.INFORMATION_MESSAGE, icone);
+        JOptionPane.showMessageDialog(frame, msg, "About " + ICFG.zagolovok, JOptionPane.INFORMATION_MESSAGE, icone);
     }//GEN-LAST:event_btnAboutActionPerformed
 
     private void btnClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearLogActionPerformed
@@ -570,13 +507,13 @@ public class PjFtpServer extends javax.swing.JFrame {
                 @Override
                 public void run() {                    
                     frame = new PjFtpServer();
-                    frame.InstallLF();
+                    Actions.InstallLF();
                     frame.setLF(frame);
                     frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
                     JFrame.setDefaultLookAndFeelDecorated(true);
                     JDialog.setDefaultLookAndFeelDecorated(true);
                     JOptionPane.setRootFrame(frame);
-                    frame.setSize(FW, FH);
+                    frame.setSize(ICFG.FW, ICFG.FH);
                     frame.setLocation(200, 200);
                     frame.setResizable(true);
                     frame.setVisible(true);
@@ -594,14 +531,14 @@ public class PjFtpServer extends javax.swing.JFrame {
                     argsHM.put("passw", pwd);
                 }
                 System.out.println(argsHM); 
-                if (!ipv.isValid(argsHM.get("listenip").trim()))  {
+                if (!ICFG.ipv.isValid(argsHM.get("listenip").trim()))  {
                     System.out.println("Wrong listen IP ! \nExit !"); 
-                    useExamples();
+                    Actions.useExamples();
                     return;
                 }
-                if (!checkTcpPort(argsHM.get("port").trim())) {
+                if (!Actions.checkTcpPort(argsHM.get("port").trim())) {
                     System.out.println("Port Wrong ! \nExit !"); 
-                    useExamples();
+                    Actions.useExamples();
                     return;
                 }                
                 try {
@@ -609,11 +546,11 @@ public class PjFtpServer extends javax.swing.JFrame {
                 } catch (FtpException | FtpServerConfigurationException ex) {
                     java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     System.out.println("\nNOT run !\nSome of parameters wrong !");
-                    useExamples();                    
+                    Actions.useExamples();                    
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException ne) {
                 System.out.println("NOT run !\nSome of parameters not given !");
-                useExamples();
+                Actions.useExamples();
             }
         }
             //}
@@ -621,7 +558,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAbout;
+    public static javax.swing.JButton btnAbout;
     public static javax.swing.JButton btnClearLog;
     private javax.swing.JButton btnQuit;
     public static javax.swing.JButton btnSelectFolder;
