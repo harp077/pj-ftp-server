@@ -53,6 +53,9 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static int MAX_CONCURRENT_LOGINS_PER_IP = 11;
     public static int MAX_IDLE_TIME = 9999;
     public static int MAX_THREADS_LOGINS = 128;
+    public static int MAX_DOWNLOAD_SPEED = Integer.MAX_VALUE;
+    public static int MAX_UPLOAD_SPEED = Integer.MAX_VALUE;
+    public static Boolean writeAccess = true;
     //public static MessageResource mrLog;
     //public static java.util.logging.Logger jul;
     public static org.apache.log4j.Logger j4log;
@@ -67,7 +70,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private static InetAddressValidator ipv = InetAddressValidator.getInstance();
     //public static List<String> listListenIP = new ArrayList<>();
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.29, build 18-08-21";
+    public static String zagolovok = " Pure Java FTP Server, v1.0.30, build 19-08-21";
 
     /*static {
         try (FileInputStream ins = new FileInputStream("cfg/jul.properties")) {
@@ -143,9 +146,9 @@ public class PjFtpServer extends javax.swing.JFrame {
         user.setPassword(password);
         user.setHomeDirectory(folder);
         List<Authority> authorities = new ArrayList<Authority>();
-        authorities.add(new WritePermission());
+        if (writeAccess) authorities.add(new WritePermission());
         authorities.add(new ConcurrentLoginPermission(MAX_CONCURRENT_LOGINS, MAX_CONCURRENT_LOGINS_PER_IP));
-        authorities.add(new TransferRatePermission(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        authorities.add(new TransferRatePermission(MAX_DOWNLOAD_SPEED, MAX_UPLOAD_SPEED));
         user.setAuthorities(authorities);
         user.setMaxIdleTime(MAX_IDLE_TIME);
         userManager.save(user);
