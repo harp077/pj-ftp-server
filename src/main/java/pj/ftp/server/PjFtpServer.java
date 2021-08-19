@@ -433,26 +433,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSelectFolderActionPerformed
 
     private void btnAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutActionPerformed
-        //changeLF();
-        String msg = " PJ-FTP-SERVER: Pure Java FTP server. Free portable cross-platform."
-                + "\n Run as root (Linux) or admin (Windows) !"
-                + "\n 1) Fully multi-threaded."
-                + "\n 2) Multi platform support."
-                + "\n 3) High upload/download speed - up to 800 Mbit/s (100 Mbyte/s) on 1Gbit/s channel when used SSD-drives on both upload/download sides. "               
-                + "\n 4) Can run in GUI-mode - without CMD arguments:" 
-                + "\n       # java -jar pj-ftp-server.jar"
-                + "\n 5) Can run without GUI in CMD-mode with CMD arguments: "
-                + "\n       # java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=root passw=root "
-                + "\n 6) For anonymous-mode in CMD-mode without GUI passw-parameter not need: "
-                + "\n       # java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=anonymous "
-                + "\n 7) Need JRE-1.8."                
-                + "\n Create by Roman Koldaev, "
-                + "\n Saratov city, Russia. "
-                + "\n mail: harp07@mail.ru "
-                + "\n SourceForge: https://sf.net/u/harp07/profile/ "
-                + "\n GitHub: https://github.com/harp077/ "; 
-        ImageIcon icone = new ImageIcon(getClass().getResource("/img/logo/ftp-green-logo-128.png"));
-        JOptionPane.showMessageDialog(frame, msg, "About " + ICFG.zagolovok, JOptionPane.INFORMATION_MESSAGE, icone);
+        Actions.about(new ImageIcon(getClass().getResource("/img/logo/ftp-green-logo-128.png")));
     }//GEN-LAST:event_btnAboutActionPerformed
 
     private void btnClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearLogActionPerformed
