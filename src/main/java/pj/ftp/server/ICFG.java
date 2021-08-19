@@ -8,7 +8,8 @@ public interface ICFG {
     public static int FW = 900;
     public static int FH = 400;
     public static InetAddressValidator ipv = InetAddressValidator.getInstance();
+    public static String allowNetDefault = "10.10.0.0/16";
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.40, build 19-08-21";    
+    public static String zagolovok = " Pure Java FTP Server, v1.0.41, build 19-08-21";    
     
 }

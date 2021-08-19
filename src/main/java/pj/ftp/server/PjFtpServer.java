@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
+import org.apache.commons.net.util.SubnetUtils;
 import org.apache.ftpserver.ConnectionConfig;
 import org.apache.ftpserver.ConnectionConfigFactory;
 import org.apache.ftpserver.FtpServer;
@@ -24,6 +26,9 @@ import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.Authority;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.UserManager;
+import org.apache.ftpserver.ipfilter.IpFilterType;
+import org.apache.ftpserver.ipfilter.RemoteIpFilter;
+import org.apache.ftpserver.ipfilter.SessionFilter;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
@@ -50,6 +55,8 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static PjFtpServer frame;
     public static Map<String, String> argsHM = new HashMap<String, String>();
     public static Thread Log_Thread;
+    public static String allowNet = ICFG.allowNetDefault;
+    public static SessionFilter sessionFilter;
 
     //public static List<String> listListenIP = new ArrayList<>();
 
@@ -91,6 +98,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.taLog.setBackground(Color.BLACK);
         this.taLog.setForeground(Color.CYAN);
         this.tfFolder.setEditable(false);
+        this.tfAllowNet.setText(ICFG.allowNetDefault);
+        //this.tfAllowNet.setColumns(5);
     }
 
     private synchronized static void startServer(String args[], String tcpPort, String login, String password, String folder, String listenIP) throws FtpException, FtpServerConfigurationException {
@@ -114,11 +123,20 @@ public class PjFtpServer extends javax.swing.JFrame {
         user.setAuthorities(authorities);
         user.setMaxIdleTime(MAX_IDLE_TIME);
         userManager.save(user);
-
+        
         ListenerFactory listenerFactory = new ListenerFactory();
         listenerFactory.setPort(Integer.parseInt(tcpPort));
         listenerFactory.setServerAddress(listenIP);
         listenerFactory.setIdleTimeout(MAX_IDLE_TIME);
+        if (args.length == 0) {
+        try {
+            allowNet=tfAllowNet.getText().trim();
+            sessionFilter = new RemoteIpFilter(IpFilterType.ALLOW, allowNet);
+            listenerFactory.setSessionFilter(sessionFilter);
+        } catch (NumberFormatException | UnknownHostException ex) {
+            java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }            
+        }
 
         FtpServerFactory ftpServerFactory = new FtpServerFactory();
         ftpServerFactory.setUserManager(userManager);
@@ -150,6 +168,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         j4log.log(Level.INFO, "Server Idle TimeOut = "+listenerFactory.getIdleTimeout());
         j4log.log(Level.INFO, "Writable = "+writeAccess);
         j4log.log(Level.INFO, "Max speed = "+MAX_SPEED/1000000 + " Mbit/s");
+        if (args.length == 0) j4log.log(Level.INFO, "Allow Network = " + allowNet);
         running = true;
         if (args.length == 0) {
             Log_Thread = new Log_Thread("log/app.log");
@@ -177,7 +196,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         tfUser.setEditable(sset);
         tfPassw.setEditable(sset);
         tfPort.setEditable(sset);
-        //tfFolder.setEditable(sset);
+        tfAllowNet.setEditable(sset);
         comboListenIP.setEnabled(sset);
         comboSpeed.setEnabled(sset);
         comboMaxLogins.setEnabled(sset);
@@ -228,6 +247,9 @@ public class PjFtpServer extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         comboWritable = new javax.swing.JComboBox<>();
         jSeparator18 = new javax.swing.JToolBar.Separator();
+        jLabel9 = new javax.swing.JLabel();
+        tfAllowNet = new javax.swing.JTextField();
+        jSeparator19 = new javax.swing.JToolBar.Separator();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taLog = new javax.swing.JTextArea();
@@ -317,7 +339,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         jLabel5.setText("MAX speed: ");
         jToolBar3.add(jLabel5);
 
-        comboSpeed.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", " " }));
+        comboSpeed.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 111" }));
+        comboSpeed.setToolTipText("");
         comboSpeed.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboSpeedActionPerformed(evt);
@@ -329,7 +352,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         jLabel6.setText("MAX logins: ");
         jToolBar3.add(jLabel6);
 
-        comboMaxLogins.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1" }));
+        comboMaxLogins.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 111" }));
+        comboMaxLogins.setToolTipText("");
         comboMaxLogins.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboMaxLoginsActionPerformed(evt);
@@ -341,7 +365,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jLabel7.setText("Max logins per IP: ");
         jToolBar3.add(jLabel7);
 
-        comboMaxLoginsPerIP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1" }));
+        comboMaxLoginsPerIP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 111" }));
         comboMaxLoginsPerIP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboMaxLoginsPerIPActionPerformed(evt);
@@ -353,7 +377,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jLabel8.setText("Writable: ");
         jToolBar3.add(jLabel8);
 
-        comboWritable.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1" }));
+        comboWritable.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 111" }));
         comboWritable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboWritableActionPerformed(evt);
@@ -361,6 +385,13 @@ public class PjFtpServer extends javax.swing.JFrame {
         });
         jToolBar3.add(comboWritable);
         jToolBar3.add(jSeparator18);
+
+        jLabel9.setText("Allow network: ");
+        jToolBar3.add(jLabel9);
+
+        tfAllowNet.setText("0.0.0.0/0");
+        jToolBar3.add(tfAllowNet);
+        jToolBar3.add(jSeparator19);
 
         jPanel1.add(jToolBar3, java.awt.BorderLayout.PAGE_START);
 
@@ -489,6 +520,13 @@ public class PjFtpServer extends javax.swing.JFrame {
             btnToggleRunStop.setSelected(false);
             return;            
         }
+        try { new SubnetUtils(tfAllowNet.getText().trim());} 
+        catch (IllegalArgumentException iae) {
+            JOptionPane.showMessageDialog(frame, "Wrong Network IP-address !", "Error", JOptionPane.ERROR_MESSAGE);
+            allowNet = ICFG.allowNetDefault;
+            tfAllowNet.setText(allowNet);
+            return;
+        }  
         ImageIcon iconOn = new ImageIcon(getClass().getResource("/img/go-green-krug-16.png"));
         ImageIcon iconOf = new ImageIcon(getClass().getResource("/img/stop-16.png"));
         if (evt.getStateChange() == ItemEvent.DESELECTED) {
@@ -662,6 +700,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -676,6 +715,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator16;
     private javax.swing.JToolBar.Separator jSeparator17;
     private javax.swing.JToolBar.Separator jSeparator18;
+    private javax.swing.JToolBar.Separator jSeparator19;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
@@ -688,6 +728,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JToolBar jToolBar3;
     public static javax.swing.JTextArea taLog;
+    public static javax.swing.JTextField tfAllowNet;
     public static javax.swing.JTextField tfFolder;
     public static javax.swing.JTextField tfPassw;
     public static javax.swing.JTextField tfPort;
