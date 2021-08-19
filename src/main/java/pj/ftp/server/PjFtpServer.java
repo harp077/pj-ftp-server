@@ -1,6 +1,7 @@
 package pj.ftp.server;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -99,7 +100,10 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.taLog.setForeground(Color.CYAN);
         this.tfFolder.setEditable(false);
         this.tfAllowNet.setText(ICFG.allowNetDefault);
-        //this.tfAllowNet.setColumns(5);
+        //this.tfAllowNet.setSize(77, 24);
+        this.tfAllowNet.setMaximumSize(ICFG.tfAllowNetSize);
+        this.tfAllowNet.setMinimumSize(ICFG.tfAllowNetSize);
+        this.tfAllowNet.setPreferredSize(ICFG.tfAllowNetSize);
     }
 
     private synchronized static void startServer(String args[], String tcpPort, String login, String password, String folder, String listenIP) throws FtpException, FtpServerConfigurationException {
@@ -389,7 +393,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jLabel9.setText("Allow network: ");
         jToolBar3.add(jLabel9);
 
-        tfAllowNet.setText("0.0.0.0/0");
+        tfAllowNet.setText("10.10.0.0/16");
         jToolBar3.add(tfAllowNet);
         jToolBar3.add(jSeparator19);
 
