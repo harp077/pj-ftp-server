@@ -149,16 +149,6 @@ public class PjFtpServer extends javax.swing.JFrame {
         }
     }*/
 
-    public void setLF(JFrame frame) {
-        try {
-            UIManager.setLookAndFeel(ICFG.currentLAF);
-        } catch (InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | ClassNotFoundException ex) {
-            Logger.getLogger(this.getName()).log(Level.ERROR, null, ex);
-        }
-        SwingUtilities.updateComponentTreeUI(frame);
-        //frame.pack();
-    }
-
     private void setBooleanBtnTf(Boolean sset) {
         tfUser.setEditable(sset);
         tfPassw.setEditable(sset);
@@ -503,7 +493,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                 public void run() {                    
                     frame = new PjFtpServer();
                     Actions.InstallLF();
-                    frame.setLF(frame);
+                    Actions.setLF(frame);
                     frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
                     JFrame.setDefaultLookAndFeelDecorated(true);
                     JDialog.setDefaultLookAndFeelDecorated(true);

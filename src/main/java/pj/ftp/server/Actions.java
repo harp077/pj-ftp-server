@@ -7,6 +7,10 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Level;
@@ -42,7 +46,17 @@ public class Actions {
     public static void InstallLF() {
         MyInstLF("javax.swing.plaf.metal.MetalLookAndFeel");
         MyInstLF("de.muntjak.tinylookandfeel.TinyLookAndFeel");
-    }   
+    }  
+    
+    public static void setLF(JFrame frame) {
+        try {
+            UIManager.setLookAndFeel(ICFG.currentLAF);
+        } catch (InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | ClassNotFoundException ex) {
+            Logger.getLogger(Actions.class.getName()).log(Level.ERROR, null, ex);
+        }
+        SwingUtilities.updateComponentTreeUI(frame);
+        //frame.pack();
+    }    
     
     public static List<String> listLocalIpAddr () {
         List<String> listListenIP = new ArrayList<>();
@@ -64,7 +78,7 @@ public class Actions {
                 j++;
             }
         } catch (SocketException | NullPointerException ex) {
-            Logger.getLogger(PjFtpServer.class.getName()).log(Level.ERROR, null, ex);
+            Logger.getLogger(Actions.class.getName()).log(Level.ERROR, null, ex);
         }  
         return listListenIP;
     }    
