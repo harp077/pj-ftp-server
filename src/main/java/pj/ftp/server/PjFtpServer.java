@@ -39,11 +39,11 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static Boolean running = false;
     public static FtpServer server;
     public static int MAX_CONCURRENT_LOGINS = 11;
-    public static int MAX_CONCURRENT_LOGINS_PER_IP = 11;
+    public static int MAX_CONCURRENT_LOGINS_PER_IP;// = 11;
     public static int MAX_IDLE_TIME = 9999;
-    public static int MAX_THREADS_LOGINS = 128;
+    public static int MAX_THREADS_LOGINS;// = 128;
     public static int MAX_SPEED;// = Integer.MAX_VALUE;99_999;//Integer.MAX_VALUE; = in Kbit/sek !!
-    public static Boolean writeAccess = true;
+    public static Boolean writeAccess;// = true;
     //public static MessageResource mrLog;
     //public static java.util.logging.Logger jul;
     public static org.apache.log4j.Logger j4log;
@@ -65,8 +65,27 @@ public class PjFtpServer extends javax.swing.JFrame {
         ImageIcon icone = new ImageIcon(getClass().getResource("/img/top-frame-triangle-16.png"));
         this.setIconImage(icone.getImage());
         this.setTitle(ICFG.zagolovok);
+        //
         this.comboSpeed.setModel(new DefaultComboBoxModel<>(ActionsFacade.speedMap.keySet().stream().sorted().toArray(String[]::new)));
         this.comboSpeed.setEditable(false);
+        MAX_SPEED=ActionsFacade.speedMap.get(comboSpeed.getSelectedItem().toString());
+        System.out.println("max speed = "+MAX_SPEED); 
+        //
+        this.comboMaxLogins.setModel(new DefaultComboBoxModel<>(ActionsFacade.loginsArray));
+        this.comboMaxLogins.setEditable(false);
+        MAX_THREADS_LOGINS=Integer.parseInt(comboMaxLogins.getSelectedItem().toString());        
+        System.out.println("Max Logins = "+MAX_THREADS_LOGINS);
+        //
+        this.comboMaxLoginsPerIP.setModel(new DefaultComboBoxModel<>(ActionsFacade.loginsArrayPerIP));
+        this.comboMaxLoginsPerIP.setEditable(false);
+        MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(comboMaxLoginsPerIP.getSelectedItem().toString());        
+        System.out.println("Max Logins Per IP = "+MAX_CONCURRENT_LOGINS_PER_IP);
+        // 
+        this.comboWritable.setModel(new DefaultComboBoxModel<>(ActionsFacade.writableArray));
+        this.comboWritable.setEditable(false);
+        writeAccess=Boolean.parseBoolean(comboWritable.getSelectedItem().toString());
+        System.out.println("Writable = "+writeAccess); 
+        //        
         this.comboListenIP.setModel(new DefaultComboBoxModel<>(ActionsFacade.listLocalIpAddr().stream().toArray(String[]::new))); 
         this.comboListenIP.setEditable(false);
         this.taLog.setBackground(Color.BLACK);
@@ -106,7 +125,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         ConnectionConfigFactory configFactory = new ConnectionConfigFactory();
         //configFactory.setAnonymousLoginEnabled(true);
-        configFactory.setMaxThreads(MAX_THREADS_LOGINS);
+        configFactory.setMaxThreads(2 + MAX_THREADS_LOGINS);
         configFactory.setMaxAnonymousLogins(MAX_THREADS_LOGINS);
         configFactory.setMaxLogins(MAX_THREADS_LOGINS);
         ConnectionConfig connectionConfig = configFactory.createConnectionConfig();
@@ -155,6 +174,9 @@ public class PjFtpServer extends javax.swing.JFrame {
         tfFolder.setEditable(sset);
         comboListenIP.setEnabled(sset);
         comboSpeed.setEnabled(sset);
+        comboMaxLogins.setEnabled(sset);
+        comboMaxLoginsPerIP.setEnabled(sset);
+        comboWritable.setEnabled(sset);
         checkBoxAnonymous.setEnabled(sset);
         btnSelectFolder.setEnabled(sset);
         if (checkBoxAnonymous.isSelected()) {
@@ -190,6 +212,16 @@ public class PjFtpServer extends javax.swing.JFrame {
         jSeparator14 = new javax.swing.JToolBar.Separator();
         jLabel5 = new javax.swing.JLabel();
         comboSpeed = new javax.swing.JComboBox<>();
+        jSeparator15 = new javax.swing.JToolBar.Separator();
+        jLabel6 = new javax.swing.JLabel();
+        comboMaxLogins = new javax.swing.JComboBox<>();
+        jSeparator16 = new javax.swing.JToolBar.Separator();
+        jLabel7 = new javax.swing.JLabel();
+        comboMaxLoginsPerIP = new javax.swing.JComboBox<>();
+        jSeparator17 = new javax.swing.JToolBar.Separator();
+        jLabel8 = new javax.swing.JLabel();
+        comboWritable = new javax.swing.JComboBox<>();
+        jSeparator18 = new javax.swing.JToolBar.Separator();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taLog = new javax.swing.JTextArea();
@@ -218,6 +250,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("parameters and actions"));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
+        jToolBar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration:"));
         jToolBar1.setFloatable(false);
         jToolBar1.add(jSeparator9);
 
@@ -271,19 +304,57 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jPanel1.add(jToolBar1, java.awt.BorderLayout.CENTER);
 
+        jToolBar3.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration:"));
         jToolBar3.setFloatable(false);
         jToolBar3.add(jSeparator14);
 
         jLabel5.setText("MAX speed: ");
         jToolBar3.add(jLabel5);
 
-        comboSpeed.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboSpeed.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", " " }));
         comboSpeed.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboSpeedActionPerformed(evt);
             }
         });
         jToolBar3.add(comboSpeed);
+        jToolBar3.add(jSeparator15);
+
+        jLabel6.setText("MAX logins: ");
+        jToolBar3.add(jLabel6);
+
+        comboMaxLogins.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1" }));
+        comboMaxLogins.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboMaxLoginsActionPerformed(evt);
+            }
+        });
+        jToolBar3.add(comboMaxLogins);
+        jToolBar3.add(jSeparator16);
+
+        jLabel7.setText("Max logins per IP: ");
+        jToolBar3.add(jLabel7);
+
+        comboMaxLoginsPerIP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1" }));
+        comboMaxLoginsPerIP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboMaxLoginsPerIPActionPerformed(evt);
+            }
+        });
+        jToolBar3.add(comboMaxLoginsPerIP);
+        jToolBar3.add(jSeparator17);
+
+        jLabel8.setText("Writable: ");
+        jToolBar3.add(jLabel8);
+
+        comboWritable.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1" }));
+        comboWritable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboWritableActionPerformed(evt);
+            }
+        });
+        jToolBar3.add(comboWritable);
+        jToolBar3.add(jSeparator18);
 
         jPanel1.add(jToolBar3, java.awt.BorderLayout.PAGE_START);
 
@@ -482,6 +553,21 @@ public class PjFtpServer extends javax.swing.JFrame {
         System.out.println("max speed = "+MAX_SPEED);
     }//GEN-LAST:event_comboSpeedActionPerformed
 
+    private void comboMaxLoginsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMaxLoginsActionPerformed
+        MAX_THREADS_LOGINS=Integer.parseInt(comboMaxLogins.getSelectedItem().toString());        
+        System.out.println("Max Logins = "+MAX_THREADS_LOGINS);
+    }//GEN-LAST:event_comboMaxLoginsActionPerformed
+
+    private void comboMaxLoginsPerIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMaxLoginsPerIPActionPerformed
+        MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(comboMaxLoginsPerIP.getSelectedItem().toString());        
+        System.out.println("Max Logins Per IP = "+MAX_CONCURRENT_LOGINS_PER_IP);
+    }//GEN-LAST:event_comboMaxLoginsPerIPActionPerformed
+
+    private void comboWritableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboWritableActionPerformed
+        writeAccess=Boolean.parseBoolean(comboWritable.getSelectedItem().toString());
+        System.out.println("Writable = "+writeAccess);
+    }//GEN-LAST:event_comboWritableActionPerformed
+
     public static void main(String args[]) {
         /*try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -556,12 +642,18 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static javax.swing.JToggleButton btnToggleRunStop;
     public static javax.swing.JCheckBox checkBoxAnonymous;
     public static javax.swing.JComboBox<String> comboListenIP;
+    public static javax.swing.JComboBox<String> comboMaxLogins;
+    public static javax.swing.JComboBox<String> comboMaxLoginsPerIP;
     public static javax.swing.JComboBox<String> comboSpeed;
+    public static javax.swing.JComboBox<String> comboWritable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -572,6 +664,10 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator14;
+    private javax.swing.JToolBar.Separator jSeparator15;
+    private javax.swing.JToolBar.Separator jSeparator16;
+    private javax.swing.JToolBar.Separator jSeparator17;
+    private javax.swing.JToolBar.Separator jSeparator18;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
