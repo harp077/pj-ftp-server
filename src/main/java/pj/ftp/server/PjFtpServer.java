@@ -148,7 +148,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         ConnectionConfigFactory configFactory = new ConnectionConfigFactory();
         //configFactory.setAnonymousLoginEnabled(true);
-        configFactory.setMaxThreads(2 + MAX_THREADS_LOGINS);
+        configFactory.setMaxThreads(4 + MAX_THREADS_LOGINS);
         configFactory.setMaxAnonymousLogins(MAX_THREADS_LOGINS);
         configFactory.setMaxLogins(MAX_THREADS_LOGINS);
         ConnectionConfig connectionConfig = configFactory.createConnectionConfig();
@@ -171,7 +171,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         j4log.log(Level.INFO, "Server Port = "+listenerFactory.getPort());
         j4log.log(Level.INFO, "Server Idle TimeOut = "+listenerFactory.getIdleTimeout());
         j4log.log(Level.INFO, "Writable = "+writeAccess);
-        j4log.log(Level.INFO, "Max speed = "+MAX_SPEED/1000000 + " Mbit/s");
+        j4log.log(Level.INFO, "Max speed = "+MAX_SPEED/1000000 + " Mbyte/s");
         if (args.length == 0) j4log.log(Level.INFO, "Allow Network = " + allowNet);
         running = true;
         if (args.length == 0) {
