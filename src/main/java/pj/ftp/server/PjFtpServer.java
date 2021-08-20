@@ -48,7 +48,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static int MAX_CONCURRENT_LOGINS_PER_IP = 11;
     public static int MAX_IDLE_TIME = 9999;
     public static int MAX_THREADS_LOGINS = 128;
-    public static int MAX_SPEED = 1000_000_000;// = Integer.MAX_VALUE;99_999;//Integer.MAX_VALUE; = in Kbit/sek !!
+    public static int MAX_SPEED = 125_000_000;// = Integer.MAX_VALUE;99_999;//Integer.MAX_VALUE; = in Kbit/sek !!
     public static Boolean writeAccess = true;
     //public static MessageResource mrLog;
     //public static java.util.logging.Logger jul;
@@ -77,7 +77,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.comboSpeed.setModel(new DefaultComboBoxModel<>(ActionsFacade.speedMap.keySet().stream().sorted().toArray(String[]::new)));
         this.comboSpeed.setEditable(false);
         MAX_SPEED=ActionsFacade.speedMap.get(comboSpeed.getSelectedItem().toString());
-        System.out.println("max speed = "+MAX_SPEED); 
+        System.out.println(maxSpeedString()); 
         //
         this.comboMaxLogins.setModel(new DefaultComboBoxModel<>(ActionsFacade.loginsArray));
         this.comboMaxLogins.setEditable(false);
@@ -104,6 +104,10 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.tfAllowNet.setMaximumSize(ICFG.tfAllowNetSize);
         this.tfAllowNet.setMinimumSize(ICFG.tfAllowNetSize);
         this.tfAllowNet.setPreferredSize(ICFG.tfAllowNetSize);
+    }
+    
+    public static String maxSpeedString () {
+        return "Max speed = " + String.format("%3.1f", (0.0+MAX_SPEED)/1000000) + " Mbyte/s, or " + String.format("%3.1f", 8*(0.0+MAX_SPEED)/1000000) + " Mbit/s";
     }
 
     private synchronized static void startServer(String args[], String tcpPort, String login, String password, String folder, String listenIP) throws FtpException, FtpServerConfigurationException {
@@ -171,7 +175,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         j4log.log(Level.INFO, "Server Port = "+listenerFactory.getPort());
         j4log.log(Level.INFO, "Server Idle TimeOut = "+listenerFactory.getIdleTimeout());
         j4log.log(Level.INFO, "Writable = "+writeAccess);
-        j4log.log(Level.INFO, "Max speed = "+MAX_SPEED/1000000 + " Mbyte/s");
+        j4log.log(Level.INFO, maxSpeedString());
         if (args.length == 0) j4log.log(Level.INFO, "Allow Network = " + allowNet);
         running = true;
         if (args.length == 0) {
@@ -599,7 +603,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
     private void comboSpeedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboSpeedActionPerformed
         MAX_SPEED=ActionsFacade.speedMap.get(comboSpeed.getSelectedItem().toString());
-        System.out.println("max speed = "+MAX_SPEED);
+        System.out.println(maxSpeedString()); 
     }//GEN-LAST:event_comboSpeedActionPerformed
 
     private void comboMaxLoginsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMaxLoginsActionPerformed

@@ -12,6 +12,6 @@ public interface ICFG {
     public static String allowNetDefault = "10.10.0.0/16";
     public static Dimension tfAllowNetSize = new Dimension(144,24);
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.43, build 20-08-21";    
+    public static String zagolovok = " Pure Java FTP Server, v1.0.44, build 20-08-21";    
     
 }
