@@ -59,6 +59,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static String allowNetAddress = ICFG.allowNetDefaultAddress;
     public static String allowNetPrefixMask = ICFG.allowNetDefaultPrefixMask;
     public static SessionFilter sessionFilter;
+    public static Boolean ipFilterEnabled = false;
 
     //public static List<String> listListenIP = new ArrayList<>();
 
@@ -110,6 +111,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.tfAllowNet.setMaximumSize(ICFG.tfAllowNetSize);
         this.tfAllowNet.setMinimumSize(ICFG.tfAllowNetSize);
         this.tfAllowNet.setPreferredSize(ICFG.tfAllowNetSize);
+        tfAllowNet.setEnabled(false);
+        comboPrefixMask.setEnabled(false);        
     }
     
     public static String maxSpeedString () {
@@ -142,7 +145,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         listenerFactory.setPort(Integer.parseInt(tcpPort));
         listenerFactory.setServerAddress(listenIP);
         listenerFactory.setIdleTimeout(MAX_IDLE_TIME);
-        if (args.length == 0) {
+        if (args.length == 0 && ipFilterEnabled) {
         try {
             allowNetAddress=tfAllowNet.getText().trim();
             allowNetPrefixMask=comboPrefixMask.getSelectedItem().toString().trim();
@@ -184,7 +187,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         j4log.log(Level.INFO, "Server Idle TimeOut = "+listenerFactory.getIdleTimeout());
         j4log.log(Level.INFO, "Writable = "+writeAccess);
         j4log.log(Level.INFO, maxSpeedString());
-        if (args.length == 0) j4log.log(Level.INFO, "Allow Network = "+allowNetAddress+allowNetPrefixMask.split("=")[0]);
+        if (args.length == 0 && ipFilterEnabled) j4log.log(Level.INFO, "Allow Network = "+allowNetAddress+allowNetPrefixMask.split("=")[0]);
         running = true;
         if (args.length == 0) {
             Log_Thread = new Log_Thread("log/app.log");
@@ -222,11 +225,16 @@ public class PjFtpServer extends javax.swing.JFrame {
         comboWritable.setEnabled(sset);
         //
         checkBoxAnonymous.setEnabled(sset);
+        checkBoxIpFilter.setEnabled(sset);
         btnSelectFolder.setEnabled(sset);
         if (checkBoxAnonymous.isSelected()) {
             tfUser.setEditable(false);
             tfPassw.setEditable(false);
         }
+        if (!checkBoxIpFilter.isSelected()) {
+            tfAllowNet.setEnabled(false);
+            comboPrefixMask.setEnabled(false);
+        }        
     }
 
     @SuppressWarnings("unchecked")
@@ -249,6 +257,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         tfPassw = new javax.swing.JTextField();
         jSeparator4 = new javax.swing.JToolBar.Separator();
         checkBoxAnonymous = new javax.swing.JCheckBox();
+        checkBoxIpFilter = new javax.swing.JCheckBox();
         jSeparator11 = new javax.swing.JToolBar.Separator();
         btnToggleRunStop = new javax.swing.JToggleButton();
         jSeparator7 = new javax.swing.JToolBar.Separator();
@@ -335,6 +344,17 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(checkBoxAnonymous);
+
+        checkBoxIpFilter.setText("IP-filter enable");
+        checkBoxIpFilter.setFocusable(false);
+        checkBoxIpFilter.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        checkBoxIpFilter.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        checkBoxIpFilter.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                checkBoxIpFilterItemStateChanged(evt);
+            }
+        });
+        jToolBar1.add(checkBoxIpFilter);
         jToolBar1.add(jSeparator11);
 
         btnToggleRunStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/go-green-krug-16.png"))); // NOI18N
@@ -648,6 +668,18 @@ public class PjFtpServer extends javax.swing.JFrame {
         System.out.println("Allow Network = "+allowNetAddress+allowNetPrefixMask.split("=")[0]); 
     }//GEN-LAST:event_comboPrefixMaskActionPerformed
 
+    private void checkBoxIpFilterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkBoxIpFilterItemStateChanged
+        if (ipFilterEnabled) {
+            ipFilterEnabled=false;
+            tfAllowNet.setEnabled(false);
+            comboPrefixMask.setEnabled(false);            
+        } else {
+            ipFilterEnabled=true;
+            tfAllowNet.setEnabled(true);
+            comboPrefixMask.setEnabled(true);            
+        }
+    }//GEN-LAST:event_checkBoxIpFilterItemStateChanged
+
     public static void main(String args[]) {
         /*try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -671,7 +703,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                     JDialog.setDefaultLookAndFeelDecorated(true);
                     JOptionPane.setRootFrame(frame);
                     frame.setSize(ICFG.FW, ICFG.FH);
-                    frame.setLocation(200, 200);
+                    frame.setLocation(90, 90);
                     frame.setResizable(true);
                     frame.setVisible(true);
                 }
@@ -722,6 +754,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static javax.swing.JButton btnSelectFolder;
     public static javax.swing.JToggleButton btnToggleRunStop;
     public static javax.swing.JCheckBox checkBoxAnonymous;
+    public static javax.swing.JCheckBox checkBoxIpFilter;
     public static javax.swing.JComboBox<String> comboListenIP;
     public static javax.swing.JComboBox<String> comboMaxLogins;
     public static javax.swing.JComboBox<String> comboMaxLoginsPerIP;
