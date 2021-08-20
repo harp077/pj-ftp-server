@@ -150,7 +150,7 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="checkBoxIpFilter">
               <Properties>
-                <Property name="text" type="java.lang.String" value="IP-filter enable"/>
+                <Property name="text" type="java.lang.String" value="Enable IP-Filter"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
                 <Property name="horizontalTextPosition" type="int" value="4"/>

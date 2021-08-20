@@ -215,7 +215,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         tfUser.setEditable(sset);
         tfPassw.setEditable(sset);
         tfPort.setEditable(sset);
-        tfAllowNet.setEditable(sset);
+        tfAllowNet.setEnabled(sset);
         //
         comboPrefixMask.setEnabled(sset);
         comboListenIP.setEnabled(sset);
@@ -345,7 +345,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         });
         jToolBar1.add(checkBoxAnonymous);
 
-        checkBoxIpFilter.setText("IP-filter enable");
+        checkBoxIpFilter.setText("Enable IP-Filter");
         checkBoxIpFilter.setFocusable(false);
         checkBoxIpFilter.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         checkBoxIpFilter.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -703,7 +703,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                     JDialog.setDefaultLookAndFeelDecorated(true);
                     JOptionPane.setRootFrame(frame);
                     frame.setSize(ICFG.FW, ICFG.FH);
-                    frame.setLocation(90, 90);
+                    frame.setLocation(80, 80);
                     frame.setResizable(true);
                     frame.setVisible(true);
                 }
