@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,16 +79,19 @@ public class PjFtpServer extends javax.swing.JFrame {
         //
         this.comboSpeed.setModel(new DefaultComboBoxModel<>(ActionsFacade.speedMap.keySet().stream().sorted().toArray(String[]::new)));
         this.comboSpeed.setEditable(false);
+        this.comboSpeed.setSelectedItem("125 Mbyte/s=1000 Mbit/s");
         MAX_SPEED=ActionsFacade.speedMap.get(comboSpeed.getSelectedItem().toString());
         System.out.println(maxSpeedString()); 
         //
         this.comboMaxLogins.setModel(new DefaultComboBoxModel<>(ActionsFacade.loginsArray));
         this.comboMaxLogins.setEditable(false);
+        this.comboMaxLogins.setSelectedItem("100");
         MAX_THREADS_LOGINS=Integer.parseInt(comboMaxLogins.getSelectedItem().toString());        
         System.out.println("Max Logins = "+MAX_THREADS_LOGINS);
         //
         this.comboMaxLoginsPerIP.setModel(new DefaultComboBoxModel<>(ActionsFacade.loginsArrayPerIP));
         this.comboMaxLoginsPerIP.setEditable(false);
+        this.comboMaxLoginsPerIP.setSelectedItem("3");
         MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(comboMaxLoginsPerIP.getSelectedItem().toString());        
         System.out.println("Max Logins Per IP = "+MAX_CONCURRENT_LOGINS_PER_IP);
         // 
@@ -145,12 +149,22 @@ public class PjFtpServer extends javax.swing.JFrame {
         listenerFactory.setPort(Integer.parseInt(tcpPort));
         listenerFactory.setServerAddress(listenIP);
         listenerFactory.setIdleTimeout(MAX_IDLE_TIME);
+        j4log.log(Level.INFO, "pj-ftp-server try to start");
+        j4log.log(Level.INFO, "try to start at = " + ICFG.sdtf.format(new Date()));
         if (args.length == 0 && ipFilterEnabled) {
         try {
             allowNetAddress=tfAllowNet.getText().trim();
             allowNetPrefixMask=comboPrefixMask.getSelectedItem().toString().trim();
             //System.out.println("Allow Network = "+allowNetAddress+allowNetPrefixMask.split("=")[0]);             
-            sessionFilter = new RemoteIpFilter(IpFilterType.ALLOW, allowNetAddress + allowNetPrefixMask.split("=")[0]);
+            //sessionFilter = new RemoteIpFilter(IpFilterType.ALLOW, allowNetAddress + allowNetPrefixMask.split("=")[0]);
+            RemoteIpFilter rif = new RemoteIpFilter(IpFilterType.ALLOW);
+            boolean bnet=rif.add(allowNetAddress + allowNetPrefixMask.split("=")[0]);
+            boolean bloop=rif.add("127.0.0.1"); //- BLOCK LOOP-BACK IF NOT LISTEN ON THIS !!!!!!!!!!!!!!!!!!!!!
+            if (bnet && bloop) {
+                System.out.println("Allow Network = " +allowNetAddress + allowNetPrefixMask.split("=")[0] +" - IpFilter make success !");
+                j4log.log(Level.INFO, "Allow Network = " +allowNetAddress + allowNetPrefixMask.split("=")[0] +" - IpFilter make success !");
+            }
+            sessionFilter=rif;
             listenerFactory.setSessionFilter(sessionFilter);
         } catch (NumberFormatException | UnknownHostException ex) {
             java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
