@@ -1,7 +1,6 @@
 package pj.ftp.server;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -257,7 +256,9 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
-        jSeparator14 = new javax.swing.JToolBar.Separator();
+        jLabel8 = new javax.swing.JLabel();
+        comboWritable = new javax.swing.JComboBox<>();
+        jSeparator19 = new javax.swing.JToolBar.Separator();
         jLabel4 = new javax.swing.JLabel();
         comboListenIP = new javax.swing.JComboBox<>();
         jSeparator12 = new javax.swing.JToolBar.Separator();
@@ -271,12 +272,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         tfPassw = new javax.swing.JTextField();
         jSeparator4 = new javax.swing.JToolBar.Separator();
         checkBoxAnonymous = new javax.swing.JCheckBox();
-        checkBoxIpFilter = new javax.swing.JCheckBox();
-        jSeparator11 = new javax.swing.JToolBar.Separator();
-        btnToggleRunStop = new javax.swing.JToggleButton();
-        jSeparator7 = new javax.swing.JToolBar.Separator();
         jToolBar3 = new javax.swing.JToolBar();
-        jSeparator9 = new javax.swing.JToolBar.Separator();
         jLabel5 = new javax.swing.JLabel();
         comboSpeed = new javax.swing.JComboBox<>();
         jSeparator15 = new javax.swing.JToolBar.Separator();
@@ -285,21 +281,20 @@ public class PjFtpServer extends javax.swing.JFrame {
         jSeparator16 = new javax.swing.JToolBar.Separator();
         jLabel7 = new javax.swing.JLabel();
         comboMaxLoginsPerIP = new javax.swing.JComboBox<>();
-        jSeparator17 = new javax.swing.JToolBar.Separator();
-        jLabel8 = new javax.swing.JLabel();
-        comboWritable = new javax.swing.JComboBox<>();
         jSeparator18 = new javax.swing.JToolBar.Separator();
         jLabel9 = new javax.swing.JLabel();
         tfAllowNet = new javax.swing.JTextField();
         comboPrefixMask = new javax.swing.JComboBox<>();
+        jSeparator11 = new javax.swing.JToolBar.Separator();
+        checkBoxIpFilter = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taLog = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jToolBar2 = new javax.swing.JToolBar();
+        btnToggleRunStop = new javax.swing.JToggleButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         btnSelectFolder = new javax.swing.JButton();
-        jSeparator6 = new javax.swing.JToolBar.Separator();
         tfFolder = new javax.swing.JTextField();
         jSeparator10 = new javax.swing.JToolBar.Separator();
         btnClearLog = new javax.swing.JButton();
@@ -307,7 +302,6 @@ public class PjFtpServer extends javax.swing.JFrame {
         btnAbout = new javax.swing.JButton();
         jSeparator13 = new javax.swing.JToolBar.Separator();
         btnQuit = new javax.swing.JButton();
-        jSeparator5 = new javax.swing.JToolBar.Separator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("pj-ftp-server");
@@ -322,7 +316,18 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jToolBar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration:"));
         jToolBar1.setFloatable(false);
-        jToolBar1.add(jSeparator14);
+
+        jLabel8.setText("Writable:");
+        jToolBar1.add(jLabel8);
+
+        comboWritable.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 111" }));
+        comboWritable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboWritableActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(comboWritable);
+        jToolBar1.add(jSeparator19);
 
         jLabel4.setText("Listen IP:");
         jToolBar1.add(jLabel4);
@@ -348,7 +353,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar1.add(tfPassw);
         jToolBar1.add(jSeparator4);
 
-        checkBoxAnonymous.setText("Anonymous mode");
+        checkBoxAnonymous.setText("Anonymous");
         checkBoxAnonymous.setFocusable(false);
         checkBoxAnonymous.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         checkBoxAnonymous.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -359,35 +364,10 @@ public class PjFtpServer extends javax.swing.JFrame {
         });
         jToolBar1.add(checkBoxAnonymous);
 
-        checkBoxIpFilter.setText("Enable IP-Filter");
-        checkBoxIpFilter.setFocusable(false);
-        checkBoxIpFilter.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        checkBoxIpFilter.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        checkBoxIpFilter.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                checkBoxIpFilterItemStateChanged(evt);
-            }
-        });
-        jToolBar1.add(checkBoxIpFilter);
-        jToolBar1.add(jSeparator11);
-
-        btnToggleRunStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/go-green-krug-16.png"))); // NOI18N
-        btnToggleRunStop.setText("Run server ");
-        btnToggleRunStop.setFocusable(false);
-        btnToggleRunStop.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        btnToggleRunStop.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                btnToggleRunStopItemStateChanged(evt);
-            }
-        });
-        jToolBar1.add(btnToggleRunStop);
-        jToolBar1.add(jSeparator7);
-
         jPanel1.add(jToolBar1, java.awt.BorderLayout.CENTER);
 
         jToolBar3.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration:"));
         jToolBar3.setFloatable(false);
-        jToolBar3.add(jSeparator9);
 
         jLabel5.setText("MAX speed:");
         jToolBar3.add(jLabel5);
@@ -425,18 +405,6 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         });
         jToolBar3.add(comboMaxLoginsPerIP);
-        jToolBar3.add(jSeparator17);
-
-        jLabel8.setText("Writable:");
-        jToolBar3.add(jLabel8);
-
-        comboWritable.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 111" }));
-        comboWritable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboWritableActionPerformed(evt);
-            }
-        });
-        jToolBar3.add(comboWritable);
         jToolBar3.add(jSeparator18);
 
         jLabel9.setText("Allow Network:");
@@ -454,6 +422,18 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         });
         jToolBar3.add(comboPrefixMask);
+        jToolBar3.add(jSeparator11);
+
+        checkBoxIpFilter.setText("IP-FILTER");
+        checkBoxIpFilter.setFocusable(false);
+        checkBoxIpFilter.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        checkBoxIpFilter.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        checkBoxIpFilter.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                checkBoxIpFilterItemStateChanged(evt);
+            }
+        });
+        jToolBar3.add(checkBoxIpFilter);
 
         jPanel1.add(jToolBar3, java.awt.BorderLayout.PAGE_START);
 
@@ -474,6 +454,17 @@ public class PjFtpServer extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         jToolBar2.setFloatable(false);
+
+        btnToggleRunStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/go-green-krug-16.png"))); // NOI18N
+        btnToggleRunStop.setText("Run FTP-server ");
+        btnToggleRunStop.setFocusable(false);
+        btnToggleRunStop.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnToggleRunStop.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnToggleRunStopItemStateChanged(evt);
+            }
+        });
+        jToolBar2.add(btnToggleRunStop);
         jToolBar2.add(jSeparator3);
 
         btnSelectFolder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/folder-green-16.png"))); // NOI18N
@@ -487,7 +478,6 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         });
         jToolBar2.add(btnSelectFolder);
-        jToolBar2.add(jSeparator6);
 
         tfFolder.setEditable(false);
         tfFolder.setText("/tmp");
@@ -530,7 +520,6 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         });
         jToolBar2.add(btnQuit);
-        jToolBar2.add(jSeparator5);
 
         jPanel3.add(jToolBar2, java.awt.BorderLayout.CENTER);
 
@@ -793,19 +782,14 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator11;
     private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
-    private javax.swing.JToolBar.Separator jSeparator14;
     private javax.swing.JToolBar.Separator jSeparator15;
     private javax.swing.JToolBar.Separator jSeparator16;
-    private javax.swing.JToolBar.Separator jSeparator17;
     private javax.swing.JToolBar.Separator jSeparator18;
+    private javax.swing.JToolBar.Separator jSeparator19;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
-    private javax.swing.JToolBar.Separator jSeparator5;
-    private javax.swing.JToolBar.Separator jSeparator6;
-    private javax.swing.JToolBar.Separator jSeparator7;
     private javax.swing.JToolBar.Separator jSeparator8;
-    private javax.swing.JToolBar.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JToolBar jToolBar3;
