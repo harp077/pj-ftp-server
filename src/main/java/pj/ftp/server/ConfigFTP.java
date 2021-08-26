@@ -2,12 +2,10 @@
 package pj.ftp.server;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +40,7 @@ public class ConfigFTP {
             //
             listenIP=prop.getProperty("listen.ip", "127.0.0.1").trim();
             username=prop.getProperty("username", "anonymous").trim();
-            password=prop.getProperty("password", "opa@na.com").trim();
+            password=prop.getProperty("password", "jer@sey.com").trim();
             port=prop.getProperty("port", "21").trim();
             folder=prop.getProperty("folder", FileUtils.getTempDirectoryPath()).trim();
             writable=Boolean.parseBoolean(prop.getProperty("writable", "true").trim());
@@ -88,7 +86,7 @@ public class ConfigFTP {
             prop.setProperty("max.concurrent.logins", frame.comboMaxLogins.getSelectedItem().toString().trim());
             prop.setProperty("max.concurrent.logins.per.ip",frame.comboMaxLoginsPerIP.getSelectedItem().toString().trim()); 
             
-            prop.store(output, "terminal cmd-mode-config");
+            prop.store(output, " terminal cmd-mode-config for run in CMD-mode:");
             
         } catch (IOException ex) {
             Logger.getLogger(ConfigFTP.class.getName()).log(Level.SEVERE, null, ex);
