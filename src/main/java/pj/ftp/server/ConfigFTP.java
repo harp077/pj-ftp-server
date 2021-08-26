@@ -39,18 +39,19 @@ public class ConfigFTP {
             // load a properties file
             prop.load(input);
             System.out.println(prop);
-            listenIP=prop.getProperty("listen.ip","10.73.2.22").trim();
-            username=prop.getProperty("username","anonymous").trim();
-            password=prop.getProperty("password","opa@na.com").trim();
-            port=prop.getProperty("port","21").trim();
-            folder=prop.getProperty("folder","/tmp").trim();
-            writable=Boolean.parseBoolean(prop.getProperty("writable","true").trim());
-            MAX_CONCURRENT_LOGINS=Integer.parseInt(prop.getProperty("max.concurrent.logins","10").trim());
-            MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(prop.getProperty("max.concurrent.logins.per.ip","3").trim());
+            //
+            listenIP=prop.getProperty("listen.ip", "127.0.0.1").trim();
+            username=prop.getProperty("username", "anonymous").trim();
+            password=prop.getProperty("password", "opa@na.com").trim();
+            port=prop.getProperty("port", "21").trim();
+            folder=prop.getProperty("folder", FileUtils.getTempDirectoryPath()).trim();
+            writable=Boolean.parseBoolean(prop.getProperty("writable", "true").trim());
+            MAX_CONCURRENT_LOGINS=Integer.parseInt(prop.getProperty("max.concurrent.logins", "10").trim());
+            MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(prop.getProperty("max.concurrent.logins.per.ip", "3").trim());
             MAX_THREADS_LOGINS=MAX_CONCURRENT_LOGINS;
-            ipFilterEnabled=Boolean.parseBoolean(prop.getProperty("ip.filter.enabled","true").trim());
-            allowNetAddress=prop.getProperty("ip.filter.allow.network.address","10.73.0.0").trim();
-            allowNetPrefix=prop.getProperty("ip.filter.allow.network.prefix","/16").trim();
+            ipFilterEnabled=Boolean.parseBoolean(prop.getProperty("ip.filter.enabled", "true").trim());
+            allowNetAddress=prop.getProperty("ip.filter.allow.network.address", "10.0.0.0").trim();
+            allowNetPrefix=prop.getProperty("ip.filter.allow.network.prefix", "/8").trim();
             
         } catch (IOException ex) {
             Logger.getLogger(ConfigFTP.class.getName()).log(Level.SEVERE, null, ex);

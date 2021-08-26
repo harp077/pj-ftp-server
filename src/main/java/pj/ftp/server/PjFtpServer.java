@@ -6,11 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -572,7 +569,9 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnQuitActionPerformed
 
     private void btnToggleRunStopItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnToggleRunStopItemStateChanged
+        //
         ConfigFTP.loadCFGfromGUI();
+        //
         if (!ActionsFacade.checkTcpPort(ConfigFTP.port)) {
             JOptionPane.showMessageDialog(frame, "Port wrong !", "Error", JOptionPane.ERROR_MESSAGE); 
             btnToggleRunStop.setSelected(false);
@@ -671,12 +670,12 @@ public class PjFtpServer extends javax.swing.JFrame {
 
     private void comboMaxLoginsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMaxLoginsActionPerformed
         ConfigFTP.MAX_THREADS_LOGINS=Integer.parseInt(comboMaxLogins.getSelectedItem().toString());        
-        System.out.println("Max Logins = "+ConfigFTP.MAX_THREADS_LOGINS);
+        System.out.println("Max concurrent Logins = "+ConfigFTP.MAX_THREADS_LOGINS);
     }//GEN-LAST:event_comboMaxLoginsActionPerformed
 
     private void comboMaxLoginsPerIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMaxLoginsPerIPActionPerformed
         ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(comboMaxLoginsPerIP.getSelectedItem().toString());        
-        System.out.println("Max Logins Per IP = "+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
+        System.out.println("Max concurrent Logins Per IP = "+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
     }//GEN-LAST:event_comboMaxLoginsPerIPActionPerformed
 
     private void comboWritableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboWritableActionPerformed
@@ -685,6 +684,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_comboWritableActionPerformed
 
     private void comboPrefixMaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPrefixMaskActionPerformed
+        ConfigFTP.allowNetAddress=tfAllowNet.getText().trim();
         ConfigFTP.allowNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
         System.out.println("Allow Network = "+ConfigFTP.allowNetAddress+ConfigFTP.allowNetPrefix); 
     }//GEN-LAST:event_comboPrefixMaskActionPerformed
@@ -750,7 +750,9 @@ public class PjFtpServer extends javax.swing.JFrame {
                     argsHM.put("passw", pwd);
                 }
                 System.out.println(argsHM);*/ 
+                //
                 ConfigFTP.loadCFGfromFile();
+                //
                 if (!ICFG.ipv.isValid(ConfigFTP.listenIP))  {
                     System.out.println("Wrong listen IP ! \nExit !"); 
                     //ActionsFacade.useExamples();

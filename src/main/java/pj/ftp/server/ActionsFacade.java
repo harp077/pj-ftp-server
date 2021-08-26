@@ -27,7 +27,7 @@ public class ActionsFacade {
     public static List<String> lookAndFeelsRealNames = new ArrayList<>(); 
     public static Map<String, Integer> speedMap = new HashMap<String, Integer>();
     public static String[] loginsArray = {"10","20","30","40","50","60","70","80","90"};
-    public static String[] loginsArrayPerIP = {"1","2","3","4","5"};
+    public static String[] loginsArrayPerIP = {"1","2","3","4","5","6","7"};
     public static String[] writableArray = {"true","false"};
     public static String[] allowNetPrefixMaskArray = {
         "/8=255.0.0.0",
@@ -132,13 +132,11 @@ public class ActionsFacade {
                 + "\n 1) Fully multi-threaded."
                 + "\n 2) Multi platform support."
                 + "\n 3) High upload/download speed - up to 800 Mbit/s (100 Mbyte/s) on 1Gbit/s channel when used SSD-drives on both upload/download sides. "               
-                + "\n 4) Can run in GUI-mode - without CMD arguments:" 
+                + "\n 4) Can run in GUI-mode:" 
                 + "\n       # java -jar pj-ftp-server.jar"
-                + "\n 5) Can run without GUI in CMD-mode with CMD arguments: "
-                + "\n       # java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=root passw=root "
-                + "\n 6) For anonymous-mode in CMD-mode without GUI passw-parameter not need: "
-                + "\n       # java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=anonymous "
-                + "\n 7) Need JRE-1.8."                
+                + "\n 5) Can run in CMD-mode (use cmd-mode-config.properties): "
+                + "\n       # java -jar pj-ftp-server.jar cmd"
+                + "\n 6) Need JRE-1.8."                
                 + "\n Create by Roman Koldaev, "
                 + "\n Saratov city, Russia. "
                 + "\n mail: harp07@mail.ru "
