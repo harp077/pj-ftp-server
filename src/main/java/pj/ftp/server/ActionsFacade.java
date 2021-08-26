@@ -26,8 +26,8 @@ public class ActionsFacade {
     public static List<String> lookAndFeelsDisplay = new ArrayList<>();
     public static List<String> lookAndFeelsRealNames = new ArrayList<>(); 
     public static Map<String, Integer> speedMap = new HashMap<String, Integer>();
-    public static String[] loginsArray = {"1","10","100"};
-    public static String[] loginsArrayPerIP = {"1","2","3","4","5","6","7","8"};
+    public static String[] loginsArray = {"10","20","30","40","50","60","70","80","90"};
+    public static String[] loginsArrayPerIP = {"1","2","3","4","5"};
     public static String[] writableArray = {"true","false"};
     public static String[] allowNetPrefixMaskArray = {
         "/8=255.0.0.0",
@@ -73,12 +73,12 @@ public class ActionsFacade {
         return false;
     }
     
-    public static void useExamples() {
+    /*public static void useExamples() {
         System.out.println("Examples of use:");
         System.out.println("java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=root passw=root");
         System.out.println("java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=anonymous"); 
         System.out.println("Anonymous mode not need passw parameter.");
-    }
+    }*/
 
     public static void MyInstLF(String lf) {
         //UIManager.installLookAndFeel(lf,lf);  

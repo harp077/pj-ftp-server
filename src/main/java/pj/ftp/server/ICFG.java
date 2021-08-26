@@ -11,7 +11,7 @@ public interface ICFG {
     public static int FH = 400;
     public static InetAddressValidator ipv = InetAddressValidator.getInstance();
     public static String allowNetDefaultAddress = "10.0.0.0";
-    public static String allowNetDefaultPrefixMask = "/8=255.0.0.0";
+    public static String allowNetDefaultPrefix = "/8";
     public static Dimension tfAllowNetSize = new Dimension(100,24);
     SimpleDateFormat stf  = new SimpleDateFormat("HH:mm:ss");
     SimpleDateFormat sdf  = new SimpleDateFormat("dd.MM.yy");

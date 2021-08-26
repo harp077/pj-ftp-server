@@ -44,22 +44,13 @@ public class PjFtpServer extends javax.swing.JFrame {
 
     public static Boolean running = false;
     public static FtpServer server;
-    public static int MAX_CONCURRENT_LOGINS = 11;
-    public static int MAX_CONCURRENT_LOGINS_PER_IP = 11;
-    public static int MAX_IDLE_TIME = 9999;
-    public static int MAX_THREADS_LOGINS = 128;
-    public static int MAX_SPEED = 125_000_000;// = Integer.MAX_VALUE;99_999;//Integer.MAX_VALUE; = in Kbit/sek !!
-    public static Boolean writeAccess = true;
     //public static MessageResource mrLog;
     //public static java.util.logging.Logger jul;
     public static org.apache.log4j.Logger j4log;
     public static PjFtpServer frame;
-    public static Map<String, String> argsHM = new HashMap<String, String>();
+    //public static Map<String, String> argsHM = new HashMap<String, String>();
     public static Thread Log_Thread;
-    public static String allowNetAddress = ICFG.allowNetDefaultAddress;
-    public static String allowNetPrefixMask = ICFG.allowNetDefaultPrefixMask;
     public static SessionFilter sessionFilter;
-    public static Boolean ipFilterEnabled = false;
 
     //public static List<String> listListenIP = new ArrayList<>();
 
@@ -79,30 +70,30 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.comboSpeed.setModel(new DefaultComboBoxModel<>(ActionsFacade.speedMap.keySet().stream().sorted().toArray(String[]::new)));
         this.comboSpeed.setEditable(false);
         this.comboSpeed.setSelectedItem("125 Mbyte/s=1000 Mbit/s");
-        MAX_SPEED=ActionsFacade.speedMap.get(comboSpeed.getSelectedItem().toString());
+        ConfigFTP.MAX_SPEED=ActionsFacade.speedMap.get(comboSpeed.getSelectedItem().toString());
         System.out.println(maxSpeedString()); 
         //
         this.comboMaxLogins.setModel(new DefaultComboBoxModel<>(ActionsFacade.loginsArray));
         this.comboMaxLogins.setEditable(false);
         this.comboMaxLogins.setSelectedItem("100");
-        MAX_THREADS_LOGINS=Integer.parseInt(comboMaxLogins.getSelectedItem().toString());        
-        System.out.println("Max Logins = "+MAX_THREADS_LOGINS);
+        ConfigFTP.MAX_THREADS_LOGINS=Integer.parseInt(comboMaxLogins.getSelectedItem().toString());        
+        System.out.println("Max concurrent Logins = "+ConfigFTP.MAX_THREADS_LOGINS);
         //
         this.comboMaxLoginsPerIP.setModel(new DefaultComboBoxModel<>(ActionsFacade.loginsArrayPerIP));
         this.comboMaxLoginsPerIP.setEditable(false);
         this.comboMaxLoginsPerIP.setSelectedItem("3");
-        MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(comboMaxLoginsPerIP.getSelectedItem().toString());        
-        System.out.println("Max Logins Per IP = "+MAX_CONCURRENT_LOGINS_PER_IP);
+        ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(comboMaxLoginsPerIP.getSelectedItem().toString());        
+        System.out.println("Max concurrent Logins Per IP = "+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
         // 
         this.comboWritable.setModel(new DefaultComboBoxModel<>(ActionsFacade.writableArray));
         this.comboWritable.setEditable(false);
-        writeAccess=Boolean.parseBoolean(comboWritable.getSelectedItem().toString());
-        System.out.println("Writable = "+writeAccess); 
+        ConfigFTP.writable=Boolean.parseBoolean(comboWritable.getSelectedItem().toString());
+        System.out.println("Writable = "+ConfigFTP.writable); 
         // 
         this.comboPrefixMask.setModel(new DefaultComboBoxModel<>(ActionsFacade.allowNetPrefixMaskArray));
         this.comboPrefixMask.setEditable(false);
-        allowNetPrefixMask=comboPrefixMask.getSelectedItem().toString().trim();
-        System.out.println("Allow Network = "+allowNetAddress+allowNetPrefixMask.split("=")[0]); 
+        ConfigFTP.allowNetPrefix=comboPrefixMask.getSelectedItem().toString().trim();
+        System.out.println("Allow Network = "+ConfigFTP.allowNetAddress+ConfigFTP.allowNetPrefix); 
         //        
         this.comboListenIP.setModel(new DefaultComboBoxModel<>(ActionsFacade.listLocalIpAddr().stream().toArray(String[]::new))); 
         this.comboListenIP.setEditable(false);
@@ -115,14 +106,16 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.tfAllowNet.setMinimumSize(ICFG.tfAllowNetSize);
         this.tfAllowNet.setPreferredSize(ICFG.tfAllowNetSize);
         tfAllowNet.setEnabled(false);
-        comboPrefixMask.setEnabled(false);        
+        comboPrefixMask.setEnabled(false);  
+        tfFolder.setText(ConfigFTP.folder);
+        tfPort.setText(ConfigFTP.port);
     }
     
     public static String maxSpeedString () {
-        return "Max speed = " + String.format("%3.1f", (0.0+MAX_SPEED)/1000000) + " Mbyte/s = " + String.format("%3.1f", 8*(0.0+MAX_SPEED)/1000000) + " Mbit/s";
+        return "Max speed = " + String.format("%3.1f", (0.0+ConfigFTP.MAX_SPEED)/1000000) + " Mbyte/s = " + String.format("%3.1f", 8*(0.0+ConfigFTP.MAX_SPEED)/1000000) + " Mbit/s";
     }
 
-    private synchronized static void startServer(String args[], String tcpPort, String login, String password, String folder, String listenIP) throws FtpException, FtpServerConfigurationException {
+    private synchronized static void startServer(String args[]) throws FtpException, FtpServerConfigurationException {
         //File propertiesFile = new File("cfg/log4j.properties");
         //PropertyConfigurator.configure(propertiesFile.toString());
         PropertyConfigurator.configure("cfg/log4j.properties");
@@ -133,35 +126,35 @@ public class PjFtpServer extends javax.swing.JFrame {
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
         UserManager userManager = userManagerFactory.createUserManager();
         BaseUser user = new BaseUser();
-        user.setName(login);
-        user.setPassword(password);
-        user.setHomeDirectory(folder);
+        user.setName(ConfigFTP.username);
+        user.setPassword(ConfigFTP.password);
+        user.setHomeDirectory(ConfigFTP.folder);
         List<Authority> authorities = new ArrayList<Authority>();
-        if (writeAccess) authorities.add(new WritePermission());
-        authorities.add(new ConcurrentLoginPermission(MAX_CONCURRENT_LOGINS, MAX_CONCURRENT_LOGINS_PER_IP));
-        authorities.add(new TransferRatePermission(MAX_SPEED, MAX_SPEED));
+        if (ConfigFTP.writable) authorities.add(new WritePermission());
+        authorities.add(new ConcurrentLoginPermission(ConfigFTP.MAX_CONCURRENT_LOGINS, ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP));
+        authorities.add(new TransferRatePermission(ConfigFTP.MAX_SPEED, ConfigFTP.MAX_SPEED));
         user.setAuthorities(authorities);
-        user.setMaxIdleTime(MAX_IDLE_TIME);
+        user.setMaxIdleTime(ConfigFTP.MAX_IDLE_TIME);
         userManager.save(user);
         
         ListenerFactory listenerFactory = new ListenerFactory();
-        listenerFactory.setPort(Integer.parseInt(tcpPort));
-        listenerFactory.setServerAddress(listenIP);
-        listenerFactory.setIdleTimeout(MAX_IDLE_TIME);
+        listenerFactory.setPort(Integer.parseInt(ConfigFTP.port));
+        listenerFactory.setServerAddress(ConfigFTP.listenIP);
+        listenerFactory.setIdleTimeout(ConfigFTP.MAX_IDLE_TIME);
         j4log.log(Level.INFO, "pj-ftp-server try to start");
         j4log.log(Level.INFO, "try to start at = " + ICFG.sdtf.format(new Date()));
-        if (args.length == 0 && ipFilterEnabled) {
+        if (ConfigFTP.ipFilterEnabled) {
         try {
-            allowNetAddress=tfAllowNet.getText().trim();
-            allowNetPrefixMask=comboPrefixMask.getSelectedItem().toString().trim();
+            //ConfigFTP.allowNetAddress=tfAllowNet.getText().trim();
+            //ConfigFTP.allowNetPrefixMask=comboPrefixMask.getSelectedItem().toString().trim();
             //System.out.println("Allow Network = "+allowNetAddress+allowNetPrefixMask.split("=")[0]);             
             //sessionFilter = new RemoteIpFilter(IpFilterType.ALLOW, allowNetAddress + allowNetPrefixMask.split("=")[0]);
             RemoteIpFilter rif = new RemoteIpFilter(IpFilterType.ALLOW);
-            boolean bnet=rif.add(allowNetAddress + allowNetPrefixMask.split("=")[0]);
+            boolean bnet=rif.add(ConfigFTP.allowNetAddress + ConfigFTP.allowNetPrefix);
             boolean bloop=rif.add("127.0.0.1"); //- BLOCK LOOP-BACK IF NOT LISTEN ON THIS !!!!!!!!!!!!!!!!!!!!!
             if (bnet && bloop) {
-                System.out.println("Allow Network = " +allowNetAddress + allowNetPrefixMask.split("=")[0] +" - IpFilter make success !");
-                j4log.log(Level.INFO, "Allow Network = " +allowNetAddress + allowNetPrefixMask.split("=")[0] +" - IpFilter make success !");
+                System.out.println("Allow Network = " +ConfigFTP.allowNetAddress + ConfigFTP.allowNetPrefix +" - IpFilter make success !");
+                j4log.log(Level.INFO, "Allow Network = " +ConfigFTP.allowNetAddress + ConfigFTP.allowNetPrefix +" - IpFilter make success !");
             }
             sessionFilter=rif;
             listenerFactory.setSessionFilter(sessionFilter);
@@ -176,9 +169,9 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         ConnectionConfigFactory configFactory = new ConnectionConfigFactory();
         //configFactory.setAnonymousLoginEnabled(true);
-        configFactory.setMaxThreads(4 + MAX_THREADS_LOGINS);
-        configFactory.setMaxAnonymousLogins(MAX_THREADS_LOGINS);
-        configFactory.setMaxLogins(MAX_THREADS_LOGINS);
+        configFactory.setMaxThreads(4 + ConfigFTP.MAX_THREADS_LOGINS);
+        configFactory.setMaxAnonymousLogins(ConfigFTP.MAX_THREADS_LOGINS);
+        configFactory.setMaxLogins(ConfigFTP.MAX_THREADS_LOGINS);
         ConnectionConfig connectionConfig = configFactory.createConnectionConfig();
         ftpServerFactory.setConnectionConfig(connectionConfig);
         //mrLog = factory.getMessageResource();
@@ -189,18 +182,19 @@ public class PjFtpServer extends javax.swing.JFrame {
         //jul.log(Level.SEVERE, "oppanki");
         j4log.log(Level.INFO, "pj-ftp-server running");
         j4log.log(Level.INFO, "Max Threads = "+connectionConfig.getMaxThreads());
-        if (args.length == 0 && tfUser.getText().trim().equals("anonymous")) {
+        if (ConfigFTP.username.trim().equals("anonymous")) {
             j4log.log(Level.INFO, "Anonymous Login Enabled by default = "+connectionConfig.isAnonymousLoginEnabled());
-            j4log.log(Level.INFO, "Max Anonymous Logins = "+connectionConfig.getMaxAnonymousLogins());
+            j4log.log(Level.INFO, "Max concurrent Anonymous Logins = "+connectionConfig.getMaxAnonymousLogins());
         }
-        j4log.log(Level.INFO, "Max Logins = "+connectionConfig.getMaxLogins());
-        j4log.log(Level.INFO, "Max Logins per IP = "+MAX_CONCURRENT_LOGINS_PER_IP);
+        j4log.log(Level.INFO, "Max concurrent Logins = "+connectionConfig.getMaxLogins());
+        j4log.log(Level.INFO, "Max concurrent Logins per IP = "+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
         j4log.log(Level.INFO, "Server Address = "+listenerFactory.getServerAddress());
         j4log.log(Level.INFO, "Server Port = "+listenerFactory.getPort());
         j4log.log(Level.INFO, "Server Idle TimeOut = "+listenerFactory.getIdleTimeout());
-        j4log.log(Level.INFO, "Writable = "+writeAccess);
+        j4log.log(Level.INFO, "Writable = "+ConfigFTP.writable);
+        j4log.log(Level.INFO, "Folder = "+ConfigFTP.folder);
         j4log.log(Level.INFO, maxSpeedString());
-        if (args.length == 0 && ipFilterEnabled) j4log.log(Level.INFO, "Allow Network = "+allowNetAddress+allowNetPrefixMask.split("=")[0]);
+        if (ConfigFTP.ipFilterEnabled) j4log.log(Level.INFO, "Allow Network = "+ConfigFTP.allowNetAddress+ConfigFTP.allowNetPrefix);
         running = true;
         if (args.length == 0) {
             Log_Thread = new Log_Thread("log/app.log");
@@ -294,6 +288,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2 = new javax.swing.JToolBar();
         btnToggleRunStop = new javax.swing.JToggleButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
+        btnSaveToCmdCfg = new javax.swing.JButton();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
         btnSelectFolder = new javax.swing.JButton();
         tfFolder = new javax.swing.JTextField();
         jSeparator10 = new javax.swing.JToolBar.Separator();
@@ -333,6 +329,11 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar1.add(jLabel4);
 
         comboListenIP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "127.0.0.1" }));
+        comboListenIP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboListenIPActionPerformed(evt);
+            }
+        });
         jToolBar1.add(comboListenIP);
         jToolBar1.add(jSeparator12);
 
@@ -467,11 +468,22 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2.add(btnToggleRunStop);
         jToolBar2.add(jSeparator3);
 
+        btnSaveToCmdCfg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/save-16.png"))); // NOI18N
+        btnSaveToCmdCfg.setText("Save to CMD-config");
+        btnSaveToCmdCfg.setFocusable(false);
+        btnSaveToCmdCfg.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnSaveToCmdCfg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveToCmdCfgActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(btnSaveToCmdCfg);
+        jToolBar2.add(jSeparator5);
+
         btnSelectFolder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/folder-green-16.png"))); // NOI18N
         btnSelectFolder.setText("Select Folder: ");
         btnSelectFolder.setFocusable(false);
         btnSelectFolder.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        btnSelectFolder.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnSelectFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSelectFolderActionPerformed(evt);
@@ -537,11 +549,15 @@ public class PjFtpServer extends javax.swing.JFrame {
             tfPassw.setText("");
             tfUser.setEditable(true);
             tfPassw.setEditable(true);
+            ConfigFTP.username="";
+            ConfigFTP.password="";
         } else {
             tfUser.setText("anonymous");
             tfPassw.setText("jer@sey.com");
             tfUser.setEditable(false);
             tfPassw.setEditable(false);
+            ConfigFTP.username="anonymous";
+            ConfigFTP.password="jer@sey.com";            
         }
     }//GEN-LAST:event_checkBoxAnonymousItemStateChanged
 
@@ -556,7 +572,8 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnQuitActionPerformed
 
     private void btnToggleRunStopItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnToggleRunStopItemStateChanged
-        if (!ActionsFacade.checkTcpPort(tfPort.getText().trim())) {
+        ConfigFTP.loadCFGfromGUI();
+        if (!ActionsFacade.checkTcpPort(ConfigFTP.port)) {
             JOptionPane.showMessageDialog(frame, "Port wrong !", "Error", JOptionPane.ERROR_MESSAGE); 
             btnToggleRunStop.setSelected(false);
             return;
@@ -571,13 +588,13 @@ public class PjFtpServer extends javax.swing.JFrame {
             btnToggleRunStop.setSelected(false);
             return;            
         }
-        try { new SubnetUtils(tfAllowNet.getText().trim()+comboPrefixMask.getSelectedItem().toString().trim().split("=")[0]);} 
+        try { new SubnetUtils(ConfigFTP.allowNetAddress+ConfigFTP.allowNetPrefix);} 
         catch (IllegalArgumentException iae) {
             JOptionPane.showMessageDialog(frame, "Wrong Network IP-address ! = "+tfAllowNet.getText().trim()+comboPrefixMask.getSelectedItem().toString().trim().split("=")[0], "Error", JOptionPane.ERROR_MESSAGE);
-            allowNetAddress = ICFG.allowNetDefaultAddress;
-            allowNetPrefixMask = ICFG.allowNetDefaultPrefixMask;
-            comboPrefixMask.setSelectedItem(allowNetPrefixMask);
-            tfAllowNet.setText(allowNetAddress);
+            ConfigFTP.allowNetAddress = ICFG.allowNetDefaultAddress;
+            ConfigFTP.allowNetPrefix = ICFG.allowNetDefaultPrefix;
+            comboPrefixMask.setSelectedItem(ConfigFTP.allowNetPrefix);
+            tfAllowNet.setText(ConfigFTP.allowNetAddress);
             return;
         }  
         ImageIcon iconOn = new ImageIcon(getClass().getResource("/img/go-green-krug-16.png"));
@@ -596,7 +613,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         }
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             try {
-                startServer(new String[0], tfPort.getText().trim(), tfUser.getText().trim(), tfPassw.getText().trim(), tfFolder.getText().trim(), comboListenIP.getSelectedItem().toString().trim());
+                startServer(new String[0]);
                 btnToggleRunStop.setIcon(iconOf);
                 btnToggleRunStop.setText("Stop server");
                 setBooleanBtnTf(false);
@@ -617,6 +634,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             case JFileChooser.APPROVE_OPTION:
                 //ftpFolder = myd.getSelectedFile().getPath();
                 tfFolder.setText(myd.getSelectedFile().getPath());
+                ConfigFTP.folder=myd.getSelectedFile().getPath();
                 //putd = myd.getSelectedFile() + "";
                 break;
             case JFileChooser.CANCEL_OPTION:
@@ -647,41 +665,49 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearLogActionPerformed
 
     private void comboSpeedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboSpeedActionPerformed
-        MAX_SPEED=ActionsFacade.speedMap.get(comboSpeed.getSelectedItem().toString());
+        ConfigFTP.MAX_SPEED=ActionsFacade.speedMap.get(comboSpeed.getSelectedItem().toString());
         System.out.println(maxSpeedString()); 
     }//GEN-LAST:event_comboSpeedActionPerformed
 
     private void comboMaxLoginsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMaxLoginsActionPerformed
-        MAX_THREADS_LOGINS=Integer.parseInt(comboMaxLogins.getSelectedItem().toString());        
-        System.out.println("Max Logins = "+MAX_THREADS_LOGINS);
+        ConfigFTP.MAX_THREADS_LOGINS=Integer.parseInt(comboMaxLogins.getSelectedItem().toString());        
+        System.out.println("Max Logins = "+ConfigFTP.MAX_THREADS_LOGINS);
     }//GEN-LAST:event_comboMaxLoginsActionPerformed
 
     private void comboMaxLoginsPerIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMaxLoginsPerIPActionPerformed
-        MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(comboMaxLoginsPerIP.getSelectedItem().toString());        
-        System.out.println("Max Logins Per IP = "+MAX_CONCURRENT_LOGINS_PER_IP);
+        ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(comboMaxLoginsPerIP.getSelectedItem().toString());        
+        System.out.println("Max Logins Per IP = "+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
     }//GEN-LAST:event_comboMaxLoginsPerIPActionPerformed
 
     private void comboWritableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboWritableActionPerformed
-        writeAccess=Boolean.parseBoolean(comboWritable.getSelectedItem().toString());
-        System.out.println("Writable = "+writeAccess);
+        ConfigFTP.writable=Boolean.parseBoolean(comboWritable.getSelectedItem().toString());
+        System.out.println("Writable = "+ConfigFTP.writable);
     }//GEN-LAST:event_comboWritableActionPerformed
 
     private void comboPrefixMaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPrefixMaskActionPerformed
-        allowNetPrefixMask=comboPrefixMask.getSelectedItem().toString().trim();
-        System.out.println("Allow Network = "+allowNetAddress+allowNetPrefixMask.split("=")[0]); 
+        ConfigFTP.allowNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
+        System.out.println("Allow Network = "+ConfigFTP.allowNetAddress+ConfigFTP.allowNetPrefix); 
     }//GEN-LAST:event_comboPrefixMaskActionPerformed
 
     private void checkBoxIpFilterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkBoxIpFilterItemStateChanged
-        if (ipFilterEnabled) {
-            ipFilterEnabled=false;
+        if (ConfigFTP.ipFilterEnabled) {
+            ConfigFTP.ipFilterEnabled=false;
             tfAllowNet.setEnabled(false);
             comboPrefixMask.setEnabled(false);            
         } else {
-            ipFilterEnabled=true;
+            ConfigFTP.ipFilterEnabled=true;
             tfAllowNet.setEnabled(true);
             comboPrefixMask.setEnabled(true);            
         }
     }//GEN-LAST:event_checkBoxIpFilterItemStateChanged
+
+    private void comboListenIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboListenIPActionPerformed
+        ConfigFTP.listenIP=comboListenIP.getSelectedItem().toString().trim();
+    }//GEN-LAST:event_comboListenIPActionPerformed
+
+    private void btnSaveToCmdCfgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveToCmdCfgActionPerformed
+        ConfigFTP.saveCFGfromGUI();
+    }//GEN-LAST:event_btnSaveToCmdCfgActionPerformed
 
     public static void main(String args[]) {
         /*try {
@@ -694,6 +720,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } */
+        //ConfigFTP.loadCFG();
         if (args.length == 0) {
             java.awt.EventQueue.invokeLater(new Runnable() {
                 @Override
@@ -714,7 +741,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         }
         if (args.length > 0) {
             try {
-                Arrays.stream(args)
+                /*Arrays.stream(args)
                 .forEach(x -> { argsHM.put(x.split("=")[0].toString(), x.split("=")[1].toString()); });
                 System.out.println(argsHM);
                 String pwd="";
@@ -722,28 +749,29 @@ public class PjFtpServer extends javax.swing.JFrame {
                     pwd="jer@sey.com";
                     argsHM.put("passw", pwd);
                 }
-                System.out.println(argsHM); 
-                if (!ICFG.ipv.isValid(argsHM.get("listenip").trim()))  {
+                System.out.println(argsHM);*/ 
+                ConfigFTP.loadCFGfromFile();
+                if (!ICFG.ipv.isValid(ConfigFTP.listenIP))  {
                     System.out.println("Wrong listen IP ! \nExit !"); 
-                    ActionsFacade.useExamples();
+                    //ActionsFacade.useExamples();
                     return;
                 }
-                if (!ActionsFacade.checkTcpPort(argsHM.get("port").trim())) {
+                if (!ActionsFacade.checkTcpPort(ConfigFTP.port)) {
                     System.out.println("Port Wrong ! \nExit !"); 
-                    ActionsFacade.useExamples();
+                    //ActionsFacade.useExamples();
                     return;
                 }                
                 try {
-                    startServer(args, argsHM.get("port").trim(), argsHM.get("user").trim(), argsHM.get("passw").trim(), argsHM.get("folder").trim(), argsHM.get("listenip").trim());
+                    startServer(args);
                 } catch (FtpException | FtpServerConfigurationException ex) {
                     java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     System.out.println("\nNOT run !\nSome of parameters wrong !");
-                    ActionsFacade.useExamples();                    
+                    //ActionsFacade.useExamples();                    
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException ne) {
                 System.out.println("NOT run !\nSome of parameters not given !");
                 System.out.println("Exception = " + ne.toString());
-                ActionsFacade.useExamples();
+                //ActionsFacade.useExamples();
             }
         }
             //}
@@ -754,6 +782,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static javax.swing.JButton btnAbout;
     public static javax.swing.JButton btnClearLog;
     private javax.swing.JButton btnQuit;
+    public static javax.swing.JButton btnSaveToCmdCfg;
     public static javax.swing.JButton btnSelectFolder;
     public static javax.swing.JToggleButton btnToggleRunStop;
     public static javax.swing.JCheckBox checkBoxAnonymous;
@@ -789,6 +818,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar.Separator jSeparator8;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
