@@ -384,10 +384,10 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar3.add(jSeparator15);
 
         jLabel6.setText("MAX logins:");
+        jLabel6.setToolTipText("Max concurrent Logins");
         jToolBar3.add(jLabel6);
 
         comboMaxLogins.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 111" }));
-        comboMaxLogins.setToolTipText("");
         comboMaxLogins.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboMaxLoginsActionPerformed(evt);
@@ -397,6 +397,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar3.add(jSeparator16);
 
         jLabel7.setText("Max login per IP:");
+        jLabel7.setToolTipText("Max concurrent Logins per IP");
         jToolBar3.add(jLabel7);
 
         comboMaxLoginsPerIP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 111" }));
@@ -469,7 +470,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2.add(jSeparator3);
 
         btnSaveToCmdCfg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/save-16.png"))); // NOI18N
-        btnSaveToCmdCfg.setText("Save to CMD-config");
+        btnSaveToCmdCfg.setText("Save This to CMD-config");
         btnSaveToCmdCfg.setFocusable(false);
         btnSaveToCmdCfg.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         btnSaveToCmdCfg.addActionListener(new java.awt.event.ActionListener() {
@@ -509,10 +510,9 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2.add(jSeparator8);
 
         btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/info-cyan-16.png"))); // NOI18N
-        btnAbout.setText(" About");
+        btnAbout.setText("About");
         btnAbout.setFocusable(false);
         btnAbout.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        btnAbout.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAboutActionPerformed(evt);

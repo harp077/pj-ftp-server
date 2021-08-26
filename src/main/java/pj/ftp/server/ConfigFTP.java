@@ -67,6 +67,9 @@ public class ConfigFTP {
         ipFilterEnabled=frame.checkBoxIpFilter.isSelected();
         allowNetAddress=frame.tfAllowNet.getText().trim();
         allowNetPrefix=frame.comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
+        MAX_CONCURRENT_LOGINS=Integer.parseInt(frame.comboMaxLogins.getSelectedItem().toString().trim());
+        MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(frame.comboMaxLoginsPerIP.getSelectedItem().toString().trim());
+        MAX_THREADS_LOGINS=MAX_CONCURRENT_LOGINS;
     }    
     
     public static void saveCFGfromGUI() {  
