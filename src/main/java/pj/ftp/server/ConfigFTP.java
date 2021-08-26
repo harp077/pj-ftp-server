@@ -84,8 +84,10 @@ public class ConfigFTP {
             prop.setProperty("ip.filter.enabled", ""+frame.checkBoxIpFilter.isSelected());
             prop.setProperty("ip.filter.allow.network.address", frame.tfAllowNet.getText().trim());
             prop.setProperty("ip.filter.allow.network.prefix", frame.comboPrefixMask.getSelectedItem().toString().split("=")[0].trim());
+            prop.setProperty("max.concurrent.logins", frame.comboMaxLogins.getSelectedItem().toString().trim());
+            prop.setProperty("max.concurrent.logins.per.ip",frame.comboMaxLoginsPerIP.getSelectedItem().toString().trim()); 
             
-            prop.store(output, null);
+            prop.store(output, "terminal cmd-mode-config");
             
         } catch (IOException ex) {
             Logger.getLogger(ConfigFTP.class.getName()).log(Level.SEVERE, null, ex);
