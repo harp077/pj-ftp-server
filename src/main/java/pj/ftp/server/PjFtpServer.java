@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -592,7 +593,9 @@ public class PjFtpServer extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(frame, "Wrong Network IP-address ! = "+tfAllowNet.getText().trim()+comboPrefixMask.getSelectedItem().toString().trim().split("=")[0], "Error", JOptionPane.ERROR_MESSAGE);
             ConfigFTP.allowNetAddress = ICFG.allowNetDefaultAddress;
             ConfigFTP.allowNetPrefix = ICFG.allowNetDefaultPrefix;
-            comboPrefixMask.setSelectedItem(ConfigFTP.allowNetPrefix);
+            System.out.println("comboPrefixMask.setSelectedItem = "+Arrays.asList(ActionsFacade.allowNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.allowNetPrefix)).findFirst());
+            // BEZ .orElse("/32=255.255.255.255") NOT WORK !!!!!!
+            comboPrefixMask.setSelectedItem(Arrays.asList(ActionsFacade.allowNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.allowNetPrefix)).findFirst().orElse("/32=255.255.255.255"));
             tfAllowNet.setText(ConfigFTP.allowNetAddress);
             return;
         }  
