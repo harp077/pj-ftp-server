@@ -104,7 +104,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.tfAllowNet.setMinimumSize(ICFG.tfAllowNetSize);
         this.tfAllowNet.setPreferredSize(ICFG.tfAllowNetSize);
         tfAllowNet.setEnabled(false);
-        comboPrefixMask.setEnabled(false);  
+        comboPrefixMask.setEnabled(false); 
+        btnAllowNetIpData.setEnabled(false);
         tfFolder.setText(ConfigFTP.folder);
         tfPort.setText(ConfigFTP.port);
     }
@@ -269,7 +270,6 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
-        jSeparator7 = new javax.swing.JToolBar.Separator();
         jLabel8 = new javax.swing.JLabel();
         comboWritable = new javax.swing.JComboBox<>();
         jSeparator19 = new javax.swing.JToolBar.Separator();
@@ -287,7 +287,6 @@ public class PjFtpServer extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JToolBar.Separator();
         checkBoxAnonymous = new javax.swing.JCheckBox();
         jToolBar3 = new javax.swing.JToolBar();
-        jSeparator6 = new javax.swing.JToolBar.Separator();
         jLabel5 = new javax.swing.JLabel();
         comboSpeed = new javax.swing.JComboBox<>();
         jSeparator15 = new javax.swing.JToolBar.Separator();
@@ -302,6 +301,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         comboPrefixMask = new javax.swing.JComboBox<>();
         jSeparator11 = new javax.swing.JToolBar.Separator();
         checkBoxIpFilter = new javax.swing.JCheckBox();
+        btnAllowNetIpData = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taLog = new javax.swing.JTextArea();
@@ -333,7 +333,6 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jToolBar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration:"));
         jToolBar1.setFloatable(false);
-        jToolBar1.add(jSeparator7);
 
         jLabel8.setText("Writable:");
         jToolBar1.add(jLabel8);
@@ -392,7 +391,6 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jToolBar3.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration:"));
         jToolBar3.setFloatable(false);
-        jToolBar3.add(jSeparator6);
 
         jLabel5.setText("MAX speed:");
         jToolBar3.add(jLabel5);
@@ -461,6 +459,17 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         });
         jToolBar3.add(checkBoxIpFilter);
+
+        btnAllowNetIpData.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/ip-blue-16.png"))); // NOI18N
+        btnAllowNetIpData.setText("Data");
+        btnAllowNetIpData.setFocusable(false);
+        btnAllowNetIpData.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnAllowNetIpData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAllowNetIpDataActionPerformed(evt);
+            }
+        });
+        jToolBar3.add(btnAllowNetIpData);
 
         jPanel1.add(jToolBar3, java.awt.BorderLayout.PAGE_START);
 
@@ -717,11 +726,13 @@ public class PjFtpServer extends javax.swing.JFrame {
         if (ConfigFTP.ipFilterEnabled) {
             ConfigFTP.ipFilterEnabled=false;
             tfAllowNet.setEnabled(false);
-            comboPrefixMask.setEnabled(false);            
+            comboPrefixMask.setEnabled(false); 
+            btnAllowNetIpData.setEnabled(false);
         } else {
             ConfigFTP.ipFilterEnabled=true;
             tfAllowNet.setEnabled(true);
-            comboPrefixMask.setEnabled(true);            
+            comboPrefixMask.setEnabled(true);  
+            btnAllowNetIpData.setEnabled(true);
         }
     }//GEN-LAST:event_checkBoxIpFilterItemStateChanged
 
@@ -732,6 +743,14 @@ public class PjFtpServer extends javax.swing.JFrame {
     private void btnSaveToCmdCfgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveToCmdCfgActionPerformed
         ConfigFTP.saveCFGfromGUI();
     }//GEN-LAST:event_btnSaveToCmdCfgActionPerformed
+
+    private void btnAllowNetIpDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAllowNetIpDataActionPerformed
+        ConfigFTP.allowNetAddress=tfAllowNet.getText().trim();
+        ConfigFTP.allowNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
+        checkAllowNetwork();
+        System.out.println("Allow Network = "+ConfigFTP.allowNetAddress+ConfigFTP.allowNetPrefix); 
+        JOptionPane.showMessageDialog(this, ActionsFacade.ipCalculator(ConfigFTP.allowNetAddress + ConfigFTP.allowNetPrefix), "IP-data for Allow Network", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnAllowNetIpDataActionPerformed
 
     public static void main(String args[]) {
         /*try {
@@ -806,6 +825,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JButton btnAbout;
+    public static javax.swing.JButton btnAllowNetIpData;
     public static javax.swing.JButton btnClearLog;
     private javax.swing.JButton btnQuit;
     public static javax.swing.JButton btnSaveToCmdCfg;
@@ -845,8 +865,6 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
-    private javax.swing.JToolBar.Separator jSeparator6;
-    private javax.swing.JToolBar.Separator jSeparator7;
     private javax.swing.JToolBar.Separator jSeparator8;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;

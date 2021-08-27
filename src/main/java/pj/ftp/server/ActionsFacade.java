@@ -17,6 +17,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.net.util.SubnetUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import static pj.ftp.server.PjFtpServer.frame;
@@ -79,6 +80,22 @@ public class ActionsFacade {
         System.out.println("java -jar pj-ftp-server.jar port=21 folder=/tmp listenip=127.0.0.1 user=anonymous"); 
         System.out.println("Anonymous mode not need passw parameter.");
     }*/
+    
+    public static String ipCalculator (String ipadr) {
+        SubnetUtils su = new SubnetUtils(ipadr);
+        //su=new SubnetUtils("10.73.2.111/23");
+        //su=new SubnetUtils("10.73.2.111", "255.255.254.0");
+        String result = "\n IP-data for Allow Network:\n";
+        result = result + "\n Low Address = " + su.getInfo().getLowAddress();
+        result = result + "\n High Address = " + su.getInfo().getHighAddress();        
+        result = result + "\n Broadcast Address = " + su.getInfo().getBroadcastAddress();
+        result = result + "\n Netmask = " + su.getInfo().getNetmask();
+        result = result + "\n Network Address = " + su.getInfo().getNetworkAddress();
+        result = result + "\n Host Addresses Count = " + su.getInfo().getAddressCountLong();
+        result = result + "\n CIDR notation = " + su.getInfo().getCidrSignature();
+        result = result + "\n MASK notation = " + StringUtils.substringBefore(ipadr, "/") + " " + su.getInfo().getNetmask();
+        return result;
+    }    
 
     public static void MyInstLF(String lf) {
         //UIManager.installLookAndFeel(lf,lf);  
