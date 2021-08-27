@@ -579,7 +579,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             return;
         }
         if (tfUser.getText().isEmpty() || tfPassw.getText().isEmpty() || tfFolder.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "Some wrong parameters !", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Some parameters is empty !", "Error", JOptionPane.ERROR_MESSAGE);
             btnToggleRunStop.setSelected(false);
             return;
         }
@@ -588,14 +588,20 @@ public class PjFtpServer extends javax.swing.JFrame {
             btnToggleRunStop.setSelected(false);
             return;            
         }
-        try { new SubnetUtils(ConfigFTP.allowNetAddress+ConfigFTP.allowNetPrefix);} 
+        try { new SubnetUtils(ConfigFTP.allowNetAddress + ConfigFTP.allowNetPrefix);} 
         catch (IllegalArgumentException iae) {
             JOptionPane.showMessageDialog(frame, "Wrong Network IP-address ! = "+tfAllowNet.getText().trim()+comboPrefixMask.getSelectedItem().toString().trim().split("=")[0], "Error", JOptionPane.ERROR_MESSAGE);
+            //btnToggleRunStop.setSelected(false);
             ConfigFTP.allowNetAddress = ICFG.allowNetDefaultAddress;
+            System.out.println("ConfigFTP.allowNetAddress = "+ConfigFTP.allowNetAddress);
             ConfigFTP.allowNetPrefix = ICFG.allowNetDefaultPrefix;
+            System.out.println("ConfigFTP.allowNetPrefix = "+ConfigFTP.allowNetPrefix);
             System.out.println("comboPrefixMask.setSelectedItem = "+Arrays.asList(ActionsFacade.allowNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.allowNetPrefix)).findFirst());
             // BEZ .orElse("/32=255.255.255.255") NOT WORK !!!!!!
             comboPrefixMask.setSelectedItem(Arrays.asList(ActionsFacade.allowNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.allowNetPrefix)).findFirst().orElse("/32=255.255.255.255"));
+            //tfAllowNet.setText("");
+            //System.out.println("tfAllowNet.isEditable() = "+tfAllowNet.isEditable());
+            //System.out.println("tfAllowNet.isEnabled() = "+tfAllowNet.isEnabled());
             tfAllowNet.setText(ConfigFTP.allowNetAddress);
             return;
         }  
@@ -687,7 +693,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_comboWritableActionPerformed
 
     private void comboPrefixMaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPrefixMaskActionPerformed
-        ConfigFTP.allowNetAddress=tfAllowNet.getText().trim();
+        //ConfigFTP.allowNetAddress=tfAllowNet.getText().trim();
         ConfigFTP.allowNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
         System.out.println("Allow Network = "+ConfigFTP.allowNetAddress+ConfigFTP.allowNetPrefix); 
     }//GEN-LAST:event_comboPrefixMaskActionPerformed
