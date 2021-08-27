@@ -256,7 +256,6 @@ public class PjFtpServer extends javax.swing.JFrame {
             System.out.println("comboPrefixMask.setSelectedItem = "+Arrays.asList(ActionsFacade.allowNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.allowNetPrefix)).findFirst());
             // BEZ .orElse("/32=255.255.255.255") NOT WORK !!!!!!
             comboPrefixMask.setSelectedItem(Arrays.asList(ActionsFacade.allowNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.allowNetPrefix)).findFirst().orElse("/32=255.255.255.255"));
-            //tfAllowNet.setText("");
             //System.out.println("tfAllowNet.isEditable() = "+tfAllowNet.isEditable());
             //System.out.println("tfAllowNet.isEnabled() = "+tfAllowNet.isEnabled());
             tfAllowNet.setText(ConfigFTP.allowNetAddress);
@@ -604,6 +603,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         //
         if (!ActionsFacade.checkTcpPort(ConfigFTP.port)) {
             JOptionPane.showMessageDialog(frame, "Port wrong !", "Error", JOptionPane.ERROR_MESSAGE); 
+            ConfigFTP.port=ICFG.DEFAULT_PORT;
+            tfPort.setText(ConfigFTP.port);
             btnToggleRunStop.setSelected(false);
             return;
         }

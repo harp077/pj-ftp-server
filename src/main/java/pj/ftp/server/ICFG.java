@@ -12,11 +12,12 @@ public interface ICFG {
     public static InetAddressValidator ipv = InetAddressValidator.getInstance();
     public static String allowNetDefaultAddress = "10.0.0.0";
     public static String allowNetDefaultPrefix = "/8";
+    public static String DEFAULT_PORT = "21";
     public static Dimension tfAllowNetSize = new Dimension(100,24);
     SimpleDateFormat stf  = new SimpleDateFormat("HH:mm:ss");
     SimpleDateFormat sdf  = new SimpleDateFormat("dd.MM.yy");
     SimpleDateFormat sdtf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");       
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.58, build 27-08-21";    
+    public static String zagolovok = " Pure Java FTP Server, v1.0.59, build 27-08-21";    
     
 }

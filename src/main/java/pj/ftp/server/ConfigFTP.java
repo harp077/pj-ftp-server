@@ -18,7 +18,7 @@ public class ConfigFTP {
     public static String username;
     public static String password;
     public static String folder=FileUtils.getTempDirectoryPath();//System.getProperty("java.io.tmpdir");
-    public static String port="21";
+    public static String port=ICFG.DEFAULT_PORT;
     public static int MAX_CONCURRENT_LOGINS = 10;
     public static int MAX_CONCURRENT_LOGINS_PER_IP = 3;
     public static int MAX_IDLE_TIME = 600;
@@ -41,7 +41,7 @@ public class ConfigFTP {
             listenIP=prop.getProperty("listen.ip", "127.0.0.1").trim();
             username=prop.getProperty("username", "anonymous").trim();
             password=prop.getProperty("password", "jer@sey.com").trim();
-            port=prop.getProperty("port", "21").trim();
+            port=prop.getProperty("port", ICFG.DEFAULT_PORT).trim();
             folder=prop.getProperty("folder", FileUtils.getTempDirectoryPath()).trim();
             writable=Boolean.parseBoolean(prop.getProperty("writable", "true").trim());
             MAX_CONCURRENT_LOGINS=Integer.parseInt(prop.getProperty("max.concurrent.logins", "10").trim());
