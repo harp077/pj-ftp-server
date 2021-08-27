@@ -241,6 +241,28 @@ public class PjFtpServer extends javax.swing.JFrame {
             comboPrefixMask.setEnabled(false);
         }        
     }
+    
+    private Boolean checkAllowNetwork() {
+        try { 
+            new SubnetUtils(ConfigFTP.allowNetAddress + ConfigFTP.allowNetPrefix);
+            return true;
+        } catch (IllegalArgumentException iae) {
+            JOptionPane.showMessageDialog(frame, "Wrong Network IP-address ! = "+tfAllowNet.getText().trim()+comboPrefixMask.getSelectedItem().toString().trim().split("=")[0], "Error", JOptionPane.ERROR_MESSAGE);
+            //btnToggleRunStop.setSelected(false);
+            ConfigFTP.allowNetAddress = ICFG.allowNetDefaultAddress;
+            System.out.println("ConfigFTP.allowNetAddress = "+ConfigFTP.allowNetAddress);
+            ConfigFTP.allowNetPrefix = ICFG.allowNetDefaultPrefix;
+            System.out.println("ConfigFTP.allowNetPrefix = "+ConfigFTP.allowNetPrefix);
+            System.out.println("comboPrefixMask.setSelectedItem = "+Arrays.asList(ActionsFacade.allowNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.allowNetPrefix)).findFirst());
+            // BEZ .orElse("/32=255.255.255.255") NOT WORK !!!!!!
+            comboPrefixMask.setSelectedItem(Arrays.asList(ActionsFacade.allowNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.allowNetPrefix)).findFirst().orElse("/32=255.255.255.255"));
+            //tfAllowNet.setText("");
+            //System.out.println("tfAllowNet.isEditable() = "+tfAllowNet.isEditable());
+            //System.out.println("tfAllowNet.isEnabled() = "+tfAllowNet.isEnabled());
+            tfAllowNet.setText(ConfigFTP.allowNetAddress);
+            return false;
+        }  
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -248,6 +270,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
+        jSeparator7 = new javax.swing.JToolBar.Separator();
         jLabel8 = new javax.swing.JLabel();
         comboWritable = new javax.swing.JComboBox<>();
         jSeparator19 = new javax.swing.JToolBar.Separator();
@@ -265,6 +288,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JToolBar.Separator();
         checkBoxAnonymous = new javax.swing.JCheckBox();
         jToolBar3 = new javax.swing.JToolBar();
+        jSeparator6 = new javax.swing.JToolBar.Separator();
         jLabel5 = new javax.swing.JLabel();
         comboSpeed = new javax.swing.JComboBox<>();
         jSeparator15 = new javax.swing.JToolBar.Separator();
@@ -310,6 +334,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jToolBar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration:"));
         jToolBar1.setFloatable(false);
+        jToolBar1.add(jSeparator7);
 
         jLabel8.setText("Writable:");
         jToolBar1.add(jLabel8);
@@ -353,6 +378,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar1.add(jSeparator4);
 
         checkBoxAnonymous.setText("Anonymous");
+        checkBoxAnonymous.setToolTipText("Anonymous mode");
         checkBoxAnonymous.setFocusable(false);
         checkBoxAnonymous.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         checkBoxAnonymous.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -367,6 +393,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jToolBar3.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration:"));
         jToolBar3.setFloatable(false);
+        jToolBar3.add(jSeparator6);
 
         jLabel5.setText("MAX speed:");
         jToolBar3.add(jLabel5);
@@ -425,6 +452,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar3.add(jSeparator11);
 
         checkBoxIpFilter.setText("IP-FILTER");
+        checkBoxIpFilter.setToolTipText("Enable/Disable IP-filter");
         checkBoxIpFilter.setFocusable(false);
         checkBoxIpFilter.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         checkBoxIpFilter.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -456,7 +484,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2.setFloatable(false);
 
         btnToggleRunStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/go-green-krug-16.png"))); // NOI18N
-        btnToggleRunStop.setText("Run FTP-server ");
+        btnToggleRunStop.setText("Run server ");
         btnToggleRunStop.setFocusable(false);
         btnToggleRunStop.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         btnToggleRunStop.addItemListener(new java.awt.event.ItemListener() {
@@ -468,7 +496,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2.add(jSeparator3);
 
         btnSaveToCmdCfg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/save-16.png"))); // NOI18N
-        btnSaveToCmdCfg.setText("Save This to CMD-config");
+        btnSaveToCmdCfg.setText("Make CMD-config");
+        btnSaveToCmdCfg.setToolTipText("Save this config to cmd-mode-config.properties");
         btnSaveToCmdCfg.setFocusable(false);
         btnSaveToCmdCfg.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         btnSaveToCmdCfg.addActionListener(new java.awt.event.ActionListener() {
@@ -588,23 +617,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             btnToggleRunStop.setSelected(false);
             return;            
         }
-        try { new SubnetUtils(ConfigFTP.allowNetAddress + ConfigFTP.allowNetPrefix);} 
-        catch (IllegalArgumentException iae) {
-            JOptionPane.showMessageDialog(frame, "Wrong Network IP-address ! = "+tfAllowNet.getText().trim()+comboPrefixMask.getSelectedItem().toString().trim().split("=")[0], "Error", JOptionPane.ERROR_MESSAGE);
-            //btnToggleRunStop.setSelected(false);
-            ConfigFTP.allowNetAddress = ICFG.allowNetDefaultAddress;
-            System.out.println("ConfigFTP.allowNetAddress = "+ConfigFTP.allowNetAddress);
-            ConfigFTP.allowNetPrefix = ICFG.allowNetDefaultPrefix;
-            System.out.println("ConfigFTP.allowNetPrefix = "+ConfigFTP.allowNetPrefix);
-            System.out.println("comboPrefixMask.setSelectedItem = "+Arrays.asList(ActionsFacade.allowNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.allowNetPrefix)).findFirst());
-            // BEZ .orElse("/32=255.255.255.255") NOT WORK !!!!!!
-            comboPrefixMask.setSelectedItem(Arrays.asList(ActionsFacade.allowNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.allowNetPrefix)).findFirst().orElse("/32=255.255.255.255"));
-            //tfAllowNet.setText("");
-            //System.out.println("tfAllowNet.isEditable() = "+tfAllowNet.isEditable());
-            //System.out.println("tfAllowNet.isEnabled() = "+tfAllowNet.isEnabled());
-            tfAllowNet.setText(ConfigFTP.allowNetAddress);
-            return;
-        }  
+        if (!checkAllowNetwork()) return;
         ImageIcon iconOn = new ImageIcon(getClass().getResource("/img/go-green-krug-16.png"));
         ImageIcon iconOf = new ImageIcon(getClass().getResource("/img/stop-16.png"));
         if (evt.getStateChange() == ItemEvent.DESELECTED) {
@@ -693,8 +706,9 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_comboWritableActionPerformed
 
     private void comboPrefixMaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPrefixMaskActionPerformed
-        //ConfigFTP.allowNetAddress=tfAllowNet.getText().trim();
+        ConfigFTP.allowNetAddress=tfAllowNet.getText().trim();
         ConfigFTP.allowNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
+        checkAllowNetwork();
         System.out.println("Allow Network = "+ConfigFTP.allowNetAddress+ConfigFTP.allowNetPrefix); 
     }//GEN-LAST:event_comboPrefixMaskActionPerformed
 
@@ -830,6 +844,8 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JToolBar.Separator jSeparator6;
+    private javax.swing.JToolBar.Separator jSeparator7;
     private javax.swing.JToolBar.Separator jSeparator8;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;

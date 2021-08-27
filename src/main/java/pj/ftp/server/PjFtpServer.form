@@ -73,6 +73,8 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
           <SubComponents>
+            <Component class="javax.swing.JToolBar$Separator" name="jSeparator7">
+            </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Writable:"/>
@@ -161,6 +163,7 @@
             <Component class="javax.swing.JCheckBox" name="checkBoxAnonymous">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Anonymous"/>
+                <Property name="toolTipText" type="java.lang.String" value="Anonymous mode"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
                 <Property name="horizontalTextPosition" type="int" value="4"/>
@@ -191,6 +194,8 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
           <SubComponents>
+            <Component class="javax.swing.JToolBar$Separator" name="jSeparator6">
+            </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="MAX speed:"/>
@@ -299,6 +304,7 @@
             <Component class="javax.swing.JCheckBox" name="checkBoxIpFilter">
               <Properties>
                 <Property name="text" type="java.lang.String" value="IP-FILTER"/>
+                <Property name="toolTipText" type="java.lang.String" value="Enable/Disable IP-filter"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
                 <Property name="horizontalTextPosition" type="int" value="4"/>
@@ -385,7 +391,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/img/go-green-krug-16.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Run FTP-server "/>
+                <Property name="text" type="java.lang.String" value="Run server "/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="4"/>
               </Properties>
@@ -403,7 +409,8 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/img/save-16.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Save This to CMD-config"/>
+                <Property name="text" type="java.lang.String" value="Make CMD-config"/>
+                <Property name="toolTipText" type="java.lang.String" value="Save this config to cmd-mode-config.properties"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="4"/>
               </Properties>

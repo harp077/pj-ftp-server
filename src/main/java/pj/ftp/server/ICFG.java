@@ -17,6 +17,6 @@ public interface ICFG {
     SimpleDateFormat sdf  = new SimpleDateFormat("dd.MM.yy");
     SimpleDateFormat sdtf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");       
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.57, build 27-08-21";    
+    public static String zagolovok = " Pure Java FTP Server, v1.0.58, build 27-08-21";    
     
 }
