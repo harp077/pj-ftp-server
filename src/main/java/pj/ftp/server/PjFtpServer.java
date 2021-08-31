@@ -187,9 +187,9 @@ public class PjFtpServer extends javax.swing.JFrame {
         }
         j4log.log(Level.INFO, "Max concurrent Logins = "+connectionConfig.getMaxLogins());
         j4log.log(Level.INFO, "Max concurrent Logins per IP = "+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
-        j4log.log(Level.INFO, "Server Address = "+listenerFactory.getServerAddress());
-        j4log.log(Level.INFO, "Server Port = "+listenerFactory.getPort());
-        j4log.log(Level.INFO, "Server Idle TimeOut = "+listenerFactory.getIdleTimeout());
+        j4log.log(Level.INFO, "Server Listen Address = "+listenerFactory.getServerAddress());
+        j4log.log(Level.INFO, "Server Listen Port = "+listenerFactory.getPort());
+        j4log.log(Level.INFO, "Server Idle TimeOut = "+listenerFactory.getIdleTimeout() + " sec");
         j4log.log(Level.INFO, "Writable = "+ConfigFTP.writable);
         j4log.log(Level.INFO, "Folder = "+ConfigFTP.folder);
         j4log.log(Level.INFO, maxSpeedString());
@@ -544,7 +544,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2.add(btnClearLog);
         jToolBar2.add(jSeparator8);
 
-        btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/info-cyan-16.png"))); // NOI18N
+        btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/help-green-16.png"))); // NOI18N
         btnAbout.setText("About");
         btnAbout.setFocusable(false);
         btnAbout.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
