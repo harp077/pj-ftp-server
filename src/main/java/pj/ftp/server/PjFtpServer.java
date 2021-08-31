@@ -168,7 +168,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         ConnectionConfigFactory configFactory = new ConnectionConfigFactory();
         //configFactory.setAnonymousLoginEnabled(true);
-        configFactory.setMaxThreads(4 + ConfigFTP.MAX_THREADS_LOGINS);
+        configFactory.setMaxThreads(ConfigFTP.MAX_THREADS_LOGINS + 8);
         configFactory.setMaxAnonymousLogins(ConfigFTP.MAX_THREADS_LOGINS);
         configFactory.setMaxLogins(ConfigFTP.MAX_THREADS_LOGINS);
         ConnectionConfig connectionConfig = configFactory.createConnectionConfig();
