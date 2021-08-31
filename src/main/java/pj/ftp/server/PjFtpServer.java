@@ -2,7 +2,10 @@ package pj.ftp.server;
 
 import java.awt.Color;
 import java.awt.event.ItemEvent;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -47,7 +50,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static org.apache.log4j.Logger j4log;
     public static PjFtpServer frame;
     //public static Map<String, String> argsHM = new HashMap<String, String>();
-    public static Thread Log_Thread;
+    //public static Thread Log_Thread;
     public static SessionFilter sessionFilter;
 
     //public static List<String> listListenIP = new ArrayList<>();
@@ -113,6 +116,23 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static String maxSpeedString () {
         return "Max speed = " + String.format("%3.1f", (0.0+ConfigFTP.MAX_SPEED)/1000000) + " Mbyte/s = " + String.format("%3.1f", 8*(0.0+ConfigFTP.MAX_SPEED)/1000000) + " Mbit/s";
     }
+    
+    public static void showLogTA() {
+        if (running == true) {
+            try {
+                //String textLine;
+                FileReader freader = new FileReader("log/app.log");
+                BufferedReader breader = new BufferedReader(freader);
+                //while ((textLine = reader.readLine()) != null) {
+                while ( breader.readLine() != null) {    
+                    //textLine = reader.readLine();
+                    taLog.read(breader, "taLogArea");
+                }
+            } catch (IOException ioe) {
+                System.err.println(ioe);
+            }
+        }
+    }    
 
     private synchronized static void startServer(String args[]) throws FtpException, FtpServerConfigurationException {
         //File propertiesFile = new File("cfg/log4j.properties");
@@ -196,11 +216,12 @@ public class PjFtpServer extends javax.swing.JFrame {
         if (ConfigFTP.ipFilterEnabled) j4log.log(Level.INFO, "Allow Network = "+ConfigFTP.allowNetAddress+ConfigFTP.allowNetPrefix);
         running = true;
         if (args.length == 0) {
-            Log_Thread = new Log_Thread("log/app.log");
+            /*Log_Thread = new Log_Thread("log/app.log");
             try {
                 Log_Thread.start();
-            } catch (IllegalThreadStateException itse) {}
+            } catch (IllegalThreadStateException itse) {}*/
             frame.setTitle(ICFG.zagolovok + ", server running");
+            showLogTA();
         }
     }
 
@@ -286,6 +307,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         tfPassw = new javax.swing.JTextField();
         jSeparator4 = new javax.swing.JToolBar.Separator();
         checkBoxAnonymous = new javax.swing.JCheckBox();
+        btnAbout = new javax.swing.JButton();
         jToolBar3 = new javax.swing.JToolBar();
         jLabel5 = new javax.swing.JLabel();
         comboSpeed = new javax.swing.JComboBox<>();
@@ -316,7 +338,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jSeparator10 = new javax.swing.JToolBar.Separator();
         btnClearLog = new javax.swing.JButton();
         jSeparator8 = new javax.swing.JToolBar.Separator();
-        btnAbout = new javax.swing.JButton();
+        btnShowLog = new javax.swing.JButton();
         jSeparator13 = new javax.swing.JToolBar.Separator();
         btnQuit = new javax.swing.JButton();
 
@@ -386,6 +408,17 @@ public class PjFtpServer extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(checkBoxAnonymous);
+
+        btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/help-green-16.png"))); // NOI18N
+        btnAbout.setText("About");
+        btnAbout.setFocusable(false);
+        btnAbout.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAboutActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnAbout);
 
         jPanel1.add(jToolBar1, java.awt.BorderLayout.CENTER);
 
@@ -544,16 +577,16 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2.add(btnClearLog);
         jToolBar2.add(jSeparator8);
 
-        btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/help-green-16.png"))); // NOI18N
-        btnAbout.setText("About");
-        btnAbout.setFocusable(false);
-        btnAbout.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        btnAbout.addActionListener(new java.awt.event.ActionListener() {
+        btnShowLog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/clipboard-pencil-16.png"))); // NOI18N
+        btnShowLog.setText("Show Log");
+        btnShowLog.setFocusable(false);
+        btnShowLog.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnShowLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAboutActionPerformed(evt);
+                btnShowLogActionPerformed(evt);
             }
         });
-        jToolBar2.add(btnAbout);
+        jToolBar2.add(btnShowLog);
         jToolBar2.add(jSeparator13);
 
         btnQuit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/quit-16.png"))); // NOI18N
@@ -639,6 +672,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                 taLog.grabFocus();//.setFocusable(true);
                 frame.setTitle(ICFG.zagolovok + ", server stop");
                 j4log.log(Level.INFO, "pj-ftp-server stop");
+                showLogTA();
                 return;
             }
         }
@@ -752,6 +786,10 @@ public class PjFtpServer extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, ActionsFacade.ipCalculator(ConfigFTP.allowNetAddress + ConfigFTP.allowNetPrefix), "IP-data for Allow Network", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnAllowNetIpDataActionPerformed
 
+    private void btnShowLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowLogActionPerformed
+        showLogTA();
+    }//GEN-LAST:event_btnShowLogActionPerformed
+
     public static void main(String args[]) {
         /*try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -830,6 +868,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JButton btnQuit;
     public static javax.swing.JButton btnSaveToCmdCfg;
     public static javax.swing.JButton btnSelectFolder;
+    public static javax.swing.JButton btnShowLog;
     public static javax.swing.JToggleButton btnToggleRunStop;
     public static javax.swing.JCheckBox checkBoxAnonymous;
     public static javax.swing.JCheckBox checkBoxIpFilter;
