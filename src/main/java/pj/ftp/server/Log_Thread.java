@@ -38,7 +38,7 @@ public class Log_Thread extends Thread {
                         System.err.println(ioe);
                     }
                     try {
-                        Thread.sleep(999);
+                        Thread.sleep(1111);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Log_Thread.class.getName()).log(Level.SEVERE, null, ex);
                     }
