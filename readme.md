@@ -2,7 +2,7 @@ Pure Java FTP server. Free portable cross-platform.
 Run as root/admin !
 1) Fully multi-threaded.
 2) Multi platform support.
-3) High upload/download speed - up to 800 Mbit/s (100 Mbyte/s) on 1Gbit/s channel when used SSD-drives on both upload/download sides.
+3) High speed - up to 800 Mbit/s (100 Mbyte/s) on 1Gbit/s channel when used SSD-drives on both sides.
 4) Can run in GUI-mode:
         # java -jar pj-ftp-server.jar
 5) Can run in CMD-mode (used cmd-mode-config.properties):
