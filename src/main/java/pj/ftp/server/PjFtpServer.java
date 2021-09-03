@@ -177,16 +177,16 @@ public class PjFtpServer extends javax.swing.JFrame {
             boolean bnet=rif.add(ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix);
             boolean bloop=rif.add("127.0.0.1"); //- BLOCK LOOP-BACK IF NOT LISTEN ON THIS !!!!!!!!!!!!!!!!!!!!!
             if (bnet && bloop) {
-                System.out.println("IP-Filter Network Type= " +rif.getType().name());
-                j4log.log(Level.INFO, "IP-Filter Network Type = " +rif.getType().name());                
-                System.out.println("IP-Filter Network = " +ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix +" - IpFilter make success !");
-                j4log.log(Level.INFO, "IP-Filter Network = " +ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix +" - IpFilter make success !");
+                System.out.println("IP-Filter Type = " +rif.getType().name());
+                j4log.log(Level.INFO, "IP-Filter Type = " +rif.getType().name());                
+                System.out.println("IP-Filter Network = " +ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix +" , IP-Filter make success !");
+                j4log.log(Level.INFO, "IP-Filter Network = " +ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix +" , IP-Filter make success !");
                 if (rif.getType().name().equals("DENY")) { 
-                    System.out.println("IP-Filter - All other networks are allowed");
-                    j4log.log(Level.INFO, "IP-Filter - All other networks are allowed");
+                    System.out.println("IP-Filter:  All other networks are allowed");
+                    j4log.log(Level.INFO, "IP-Filter:  All other networks are allowed");
                 } else {
-                    System.out.println("IP-Filter - All other networks are denied"); 
-                    j4log.log(Level.INFO, "IP-Filter - All other networks are denied");
+                    System.out.println("IP-Filter:  All other networks are denied"); 
+                    j4log.log(Level.INFO, "IP-Filter:  All other networks are denied");
                 }
             }
             sessionFilter=rif;
@@ -228,14 +228,14 @@ public class PjFtpServer extends javax.swing.JFrame {
         j4log.log(Level.INFO, "Folder = "+ConfigFTP.folder);
         j4log.log(Level.INFO, maxSpeedString());
         if (ConfigFTP.ipFilterEnabled) {
-            j4log.log(Level.INFO, "IP-Filter Network = "+ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix);
-            j4log.log(Level.INFO, "IP-Filter Network Type = "+ConfigFTP.aclType);
+            j4log.log(Level.INFO, "IP-Filter Network = " + ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix);
+            j4log.log(Level.INFO, "IP-Filter Type = " + ConfigFTP.aclType.toUpperCase());
             if (ConfigFTP.aclType.trim().equals("deny")) { 
-                System.out.println("IP-Filter - All other networks are allowed");
-                j4log.log(Level.INFO, "IP-Filter - All other networks are allowed");
+                System.out.println("IP-Filter:  All other networks are allowed");
+                j4log.log(Level.INFO, "IP-Filter:  All other networks are allowed");
             } else {
-                System.out.println("IP-Filter - All other networks are denied"); 
-                j4log.log(Level.INFO, "IP-Filter - All other networks are denied");
+                System.out.println("IP-Filter:  All other networks are denied"); 
+                j4log.log(Level.INFO, "IP-Filter:  All other networks are denied");
             }            
         }
         running = true;
@@ -301,6 +301,9 @@ public class PjFtpServer extends javax.swing.JFrame {
             System.out.println("ConfigFTP.allowNetAddress = "+ConfigFTP.aclNetAddress);
             ConfigFTP.aclNetPrefix = ICFG.aclNetDefaultPrefix;
             System.out.println("ConfigFTP.allowNetPrefix = "+ConfigFTP.aclNetPrefix);
+            ConfigFTP.aclType = ICFG.aclTypeDefault;
+            System.out.println("ConfigFTP.aclType = " + ConfigFTP.aclType); 
+            comboTypeACL.setSelectedItem(ConfigFTP.aclType);
             System.out.println("comboPrefixMask.setSelectedItem = "+Arrays.asList(ActionsFacade.aclNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.aclNetPrefix)).findFirst());
             // BEZ .orElse("/32=255.255.255.255") NOT WORK !!!!!!
             comboPrefixMask.setSelectedItem(Arrays.asList(ActionsFacade.aclNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.aclNetPrefix)).findFirst().orElse("/32=255.255.255.255"));
@@ -795,8 +798,14 @@ public class PjFtpServer extends javax.swing.JFrame {
     private void comboPrefixMaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPrefixMaskActionPerformed
         ConfigFTP.aclNetAddress=tfAclNetAdres.getText().trim();
         ConfigFTP.aclNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
+        ConfigFTP.aclType=comboTypeACL.getSelectedItem().toString().trim();
         checkAclNetwork();
-        System.out.println("Allow Network = "+ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
+        System.out.println("IP-Filter Network = " + ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
+        System.out.println("IP-Filter Type = " + ConfigFTP.aclType.toUpperCase());
+        if (ConfigFTP.aclType.trim().equals("deny"))  
+            System.out.println("IP-Filter:  All other networks are allowed");
+        else 
+            System.out.println("IP-Filter:  All other networks are denied"); 
     }//GEN-LAST:event_comboPrefixMaskActionPerformed
 
     private void checkBoxIpFilterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkBoxIpFilterItemStateChanged
@@ -826,9 +835,11 @@ public class PjFtpServer extends javax.swing.JFrame {
     private void btnAclNetIpDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAclNetIpDataActionPerformed
         ConfigFTP.aclNetAddress=tfAclNetAdres.getText().trim();
         ConfigFTP.aclNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
-        checkAclNetwork();
-        System.out.println(ConfigFTP.aclType.toUpperCase()+" Network = "+ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
-        JOptionPane.showMessageDialog(this, ActionsFacade.ipCalculator(ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix), "IP-data for "+ConfigFTP.aclType.toUpperCase()+" Network", JOptionPane.INFORMATION_MESSAGE);
+        ConfigFTP.aclType=comboTypeACL.getSelectedItem().toString().trim();
+        if (checkAclNetwork()) {
+            System.out.println(ConfigFTP.aclType.toUpperCase()+" Network = "+ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
+            JOptionPane.showMessageDialog(this, ActionsFacade.ipCalculator(ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix), "IP-data for "+ConfigFTP.aclType.toUpperCase()+" Network", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_btnAclNetIpDataActionPerformed
 
     private void btnShowLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowLogActionPerformed
@@ -837,6 +848,15 @@ public class PjFtpServer extends javax.swing.JFrame {
 
     private void comboTypeACLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboTypeACLActionPerformed
         ConfigFTP.aclType=comboTypeACL.getSelectedItem().toString().trim();
+        ConfigFTP.aclNetAddress=tfAclNetAdres.getText().trim();
+        ConfigFTP.aclNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
+        checkAclNetwork();
+        System.out.println("IP-Filter Network = " + ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
+        System.out.println("IP-Filter Type = " + ConfigFTP.aclType.toUpperCase());
+        if (ConfigFTP.aclType.trim().equals("deny"))  
+            System.out.println("IP-Filter:  All other networks are allowed");
+        else 
+            System.out.println("IP-Filter:  All other networks are denied");        
     }//GEN-LAST:event_comboTypeACLActionPerformed
 
     public static void main(String args[]) {
