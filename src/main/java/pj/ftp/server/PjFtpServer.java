@@ -177,8 +177,8 @@ public class PjFtpServer extends javax.swing.JFrame {
             boolean bnet=rif.add(ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix);
             boolean bloop=rif.add("127.0.0.1"); //- BLOCK LOOP-BACK IF NOT LISTEN ON THIS !!!!!!!!!!!!!!!!!!!!!
             if (bnet && bloop) {
-                System.out.println("IP-Filter Network Type= " +ConfigFTP.aclType);
-                j4log.log(Level.INFO, "IP-Filter Network Type = " +ConfigFTP.aclType);                
+                System.out.println("IP-Filter Network Type= " +rif.getType().name());
+                j4log.log(Level.INFO, "IP-Filter Network Type = " +rif.getType().name());                
                 System.out.println("IP-Filter Network = " +ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix +" - IpFilter make success !");
                 j4log.log(Level.INFO, "IP-Filter Network = " +ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix +" - IpFilter make success !");
             }

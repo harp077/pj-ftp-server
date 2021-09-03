@@ -7,7 +7,7 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 
 public interface ICFG {
     
-    public static int FW = 940;
+    public static int FW = 950;
     public static int FH = 400;
     public static InetAddressValidator ipv = InetAddressValidator.getInstance();
     public static String aclNetDefaultAddress = "10.0.0.0";
@@ -19,6 +19,6 @@ public interface ICFG {
     SimpleDateFormat sdf  = new SimpleDateFormat("dd.MM.yy");
     SimpleDateFormat sdtf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");       
     public static String currentLAF = "de.muntjak.tinylookandfeel.TinyLookAndFeel";
-    public static String zagolovok = " Pure Java FTP Server, v1.0.71, build 03-09-21";    
+    public static String zagolovok = " Pure Java FTP Server, v1.0.72, build 03-09-21";    
     
 }
