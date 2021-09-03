@@ -100,6 +100,10 @@ public class ActionsFacade {
         result = result + "\n Host Addresses Count = " + su.getInfo().getAddressCountLong();
         result = result + "\n CIDR notation = " + su.getInfo().getCidrSignature();
         result = result + "\n MASK notation = " + StringUtils.substringBefore(ipadr, "/") + " " + su.getInfo().getNetmask();
+        if (ConfigFTP.aclType.trim().equals("deny")) 
+            result = result + "\n\n All other networks are allowed \n";
+        else
+            result = result + "\n\n All other networks are denied \n";
         return result;
     }    
 
