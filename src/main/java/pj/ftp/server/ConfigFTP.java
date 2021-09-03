@@ -25,9 +25,10 @@ public class ConfigFTP {
     public static int MAX_THREADS_LOGINS = 100;
     public static int MAX_SPEED = 125_000_000;// = Integer.MAX_VALUE;99_999;//Integer.MAX_VALUE; = in Kbit/sek !!
     public static Boolean writable = true;
-    public static String allowNetAddress = ICFG.allowNetDefaultAddress;
-    public static String allowNetPrefix = ICFG.allowNetDefaultPrefix;
+    public static String aclNetAddress = ICFG.aclNetDefaultAddress;
+    public static String aclNetPrefix = ICFG.aclNetDefaultPrefix;
     public static Boolean ipFilterEnabled = false; 
+    public static String aclType = ICFG.aclTypeDefault;
     //
     public static Properties prop;
     
@@ -48,8 +49,9 @@ public class ConfigFTP {
             MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(prop.getProperty("max.concurrent.logins.per.ip", "3").trim());
             MAX_THREADS_LOGINS=MAX_CONCURRENT_LOGINS;
             ipFilterEnabled=Boolean.parseBoolean(prop.getProperty("ip.filter.enabled", "true").trim());
-            allowNetAddress=prop.getProperty("ip.filter.allow.network.address", "10.0.0.0").trim();
-            allowNetPrefix=prop.getProperty("ip.filter.allow.network.prefix", "/8").trim();
+            aclNetAddress=prop.getProperty("ip.filter.network.address", "10.0.0.0").trim();
+            aclNetPrefix=prop.getProperty("ip.filter.network.prefix", "/8").trim();
+            aclType=prop.getProperty("ip.filter.type", ICFG.aclTypeDefault).trim();
             
         } catch (IOException ex) {
             Logger.getLogger(ConfigFTP.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,11 +66,12 @@ public class ConfigFTP {
         folder=frame.tfFolder.getText().trim();
         writable=Boolean.parseBoolean(frame.comboWritable.getSelectedItem().toString().trim());
         ipFilterEnabled=frame.checkBoxIpFilter.isSelected();
-        allowNetAddress=frame.tfAllowNet.getText().trim();
-        allowNetPrefix=frame.comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
+        aclNetAddress=frame.tfAclNetAdres.getText().trim();
+        aclNetPrefix=frame.comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
         MAX_CONCURRENT_LOGINS=Integer.parseInt(frame.comboMaxLogins.getSelectedItem().toString().trim());
         MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(frame.comboMaxLoginsPerIP.getSelectedItem().toString().trim());
         MAX_THREADS_LOGINS=MAX_CONCURRENT_LOGINS;
+        aclType=frame.comboTypeACL.getSelectedItem().toString().trim();
     }    
     
     public static void saveCFGfromGUI() {  
@@ -81,8 +84,9 @@ public class ConfigFTP {
             prop.setProperty("folder", frame.tfFolder.getText().trim());
             prop.setProperty("writable", frame.comboWritable.getSelectedItem().toString().trim());
             prop.setProperty("ip.filter.enabled", ""+frame.checkBoxIpFilter.isSelected());
-            prop.setProperty("ip.filter.allow.network.address", frame.tfAllowNet.getText().trim());
-            prop.setProperty("ip.filter.allow.network.prefix", frame.comboPrefixMask.getSelectedItem().toString().split("=")[0].trim());
+            prop.setProperty("ip.filter.type", frame.comboTypeACL.getSelectedItem().toString().trim());
+            prop.setProperty("ip.filter.network.address", frame.tfAclNetAdres.getText().trim());
+            prop.setProperty("ip.filter.network.prefix", frame.comboPrefixMask.getSelectedItem().toString().split("=")[0].trim());
             prop.setProperty("max.concurrent.logins", frame.comboMaxLogins.getSelectedItem().toString().trim());
             prop.setProperty("max.concurrent.logins.per.ip",frame.comboMaxLoginsPerIP.getSelectedItem().toString().trim()); 
             
