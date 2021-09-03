@@ -303,6 +303,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
+        jSeparator7 = new javax.swing.JToolBar.Separator();
         jLabel8 = new javax.swing.JLabel();
         comboWritable = new javax.swing.JComboBox<>();
         jSeparator19 = new javax.swing.JToolBar.Separator();
@@ -321,6 +322,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         checkBoxAnonymous = new javax.swing.JCheckBox();
         btnAbout = new javax.swing.JButton();
         jToolBar3 = new javax.swing.JToolBar();
+        jSeparator6 = new javax.swing.JToolBar.Separator();
         jLabel5 = new javax.swing.JLabel();
         comboSpeed = new javax.swing.JComboBox<>();
         jSeparator15 = new javax.swing.JToolBar.Separator();
@@ -369,6 +371,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jToolBar1.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration:"));
         jToolBar1.setFloatable(false);
+        jToolBar1.add(jSeparator7);
 
         jLabel8.setText("Writable:");
         jToolBar1.add(jLabel8);
@@ -438,6 +441,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         jToolBar3.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuration:"));
         jToolBar3.setFloatable(false);
+        jToolBar3.add(jSeparator6);
 
         jLabel5.setText("MAX speed:");
         jToolBar3.add(jLabel5);
@@ -845,7 +849,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                     JDialog.setDefaultLookAndFeelDecorated(true);
                     JOptionPane.setRootFrame(frame);
                     frame.setSize(ICFG.FW, ICFG.FH);
-                    frame.setLocation(80, 80);
+                    frame.setLocation(50, 50);
                     frame.setResizable(true);
                     frame.setVisible(true);
                 }
@@ -937,6 +941,8 @@ public class PjFtpServer extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JToolBar.Separator jSeparator6;
+    private javax.swing.JToolBar.Separator jSeparator7;
     private javax.swing.JToolBar.Separator jSeparator8;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
