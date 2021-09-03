@@ -32,7 +32,7 @@ public class ActionsFacade {
     public static String[] loginsArrayPerIP = {"1","2","3","4","5"};
     public static String[] writableArray = {"true","false"};
     public static Map<String, IpFilterType> aclTypeMap = new HashMap<String, IpFilterType>();
-    public static String[] aclTypeArray = {"Allow","Deny"};
+    public static String[] aclTypeArray = {"allow","deny"};
     public static String[] aclNetPrefixMaskArray = {
         "/8=255.0.0.0",
         "/9=255.128.0.0",
@@ -67,8 +67,8 @@ public class ActionsFacade {
         speedMap.put("100 Mbyte/s=800 Mbit/s", 100_000_000);
         speedMap.put("125 Mbyte/s=1000 Mbit/s", 125_000_000);
         //
-        aclTypeMap.put("Allow", IpFilterType.ALLOW);
-        aclTypeMap.put("Deny",  IpFilterType.DENY);        
+        aclTypeMap.put("allow", IpFilterType.ALLOW);
+        aclTypeMap.put("deny",  IpFilterType.DENY);        
     }
    
     public static boolean checkTcpPort(String tcpPort) {

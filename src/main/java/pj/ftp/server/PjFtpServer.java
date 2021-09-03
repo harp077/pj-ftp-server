@@ -28,7 +28,6 @@ import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.Authority;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.UserManager;
-import org.apache.ftpserver.ipfilter.IpFilterType;
 import org.apache.ftpserver.ipfilter.RemoteIpFilter;
 import org.apache.ftpserver.ipfilter.SessionFilter;
 import org.apache.ftpserver.listener.ListenerFactory;
