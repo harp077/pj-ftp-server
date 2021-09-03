@@ -276,7 +276,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         }        
     }
     
-    private Boolean checkAllowNetwork() {
+    private Boolean checkAclNetwork() {
         try { 
             new SubnetUtils(ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix);
             return true;
@@ -685,7 +685,7 @@ public class PjFtpServer extends javax.swing.JFrame {
             btnToggleRunStop.setSelected(false);
             return;            
         }
-        if (!checkAllowNetwork()) return;
+        if (!checkAclNetwork()) return;
         ImageIcon iconOn = new ImageIcon(getClass().getResource("/img/go-green-krug-16.png"));
         ImageIcon iconOf = new ImageIcon(getClass().getResource("/img/stop-16.png"));
         if (evt.getStateChange() == ItemEvent.DESELECTED) {
@@ -777,7 +777,7 @@ public class PjFtpServer extends javax.swing.JFrame {
     private void comboPrefixMaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPrefixMaskActionPerformed
         ConfigFTP.aclNetAddress=tfAclNetAdres.getText().trim();
         ConfigFTP.aclNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
-        checkAllowNetwork();
+        checkAclNetwork();
         System.out.println("Allow Network = "+ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
     }//GEN-LAST:event_comboPrefixMaskActionPerformed
 
@@ -808,9 +808,9 @@ public class PjFtpServer extends javax.swing.JFrame {
     private void btnAclNetIpDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAclNetIpDataActionPerformed
         ConfigFTP.aclNetAddress=tfAclNetAdres.getText().trim();
         ConfigFTP.aclNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
-        checkAllowNetwork();
-        System.out.println("Allow Network = "+ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
-        JOptionPane.showMessageDialog(this, ActionsFacade.ipCalculator(ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix), "IP-data for Allow Network", JOptionPane.INFORMATION_MESSAGE);
+        checkAclNetwork();
+        System.out.println(ConfigFTP.aclType.toUpperCase()+" Network = "+ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
+        JOptionPane.showMessageDialog(this, ActionsFacade.ipCalculator(ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix), "IP-data for "+ConfigFTP.aclType.toUpperCase()+" Network", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnAclNetIpDataActionPerformed
 
     private void btnShowLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowLogActionPerformed

@@ -91,7 +91,7 @@ public class ActionsFacade {
         SubnetUtils su = new SubnetUtils(ipadr);
         //su=new SubnetUtils("10.73.2.111/23");
         //su=new SubnetUtils("10.73.2.111", "255.255.254.0");
-        String result = "\n IP-data for Allow Network:\n";
+        String result = "\n IP-data for "+ConfigFTP.aclType.toUpperCase()+" Network:\n";
         result = result + "\n Low Address = " + su.getInfo().getLowAddress();
         result = result + "\n High Address = " + su.getInfo().getHighAddress();        
         result = result + "\n Broadcast Address = " + su.getInfo().getBroadcastAddress();
