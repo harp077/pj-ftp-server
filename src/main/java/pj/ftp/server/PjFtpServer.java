@@ -93,12 +93,12 @@ public class PjFtpServer extends javax.swing.JFrame {
         this.comboPrefixMask.setModel(new DefaultComboBoxModel<>(ActionsFacade.aclNetPrefixMaskArray));
         this.comboPrefixMask.setEditable(false);
         ConfigFTP.aclNetPrefix=comboPrefixMask.getSelectedItem().toString().trim();
-        System.out.println("IP-Filter Network = "+ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
+        //System.out.println("IP-Filter Network = "+ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
         //    
         this.comboTypeACL.setModel(new DefaultComboBoxModel<>(ActionsFacade.aclTypeArray));
         this.comboTypeACL.setEditable(false);
         ConfigFTP.aclType=comboTypeACL.getSelectedItem().toString().trim();
-        System.out.println("IP-Filter Network Type = "+ConfigFTP.aclType); 
+        //System.out.println("IP-Filter Network Type = "+ConfigFTP.aclType); 
         //
         this.comboListenIP.setModel(new DefaultComboBoxModel<>(ActionsFacade.listLocalIpAddr().stream().toArray(String[]::new))); 
         this.comboListenIP.setEditable(false);
@@ -181,6 +181,13 @@ public class PjFtpServer extends javax.swing.JFrame {
                 j4log.log(Level.INFO, "IP-Filter Network Type = " +rif.getType().name());                
                 System.out.println("IP-Filter Network = " +ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix +" - IpFilter make success !");
                 j4log.log(Level.INFO, "IP-Filter Network = " +ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix +" - IpFilter make success !");
+                if (rif.getType().name().equals("DENY")) { 
+                    System.out.println("IP-Filter - All other networks are allowed");
+                    j4log.log(Level.INFO, "IP-Filter - All other networks are allowed");
+                } else {
+                    System.out.println("IP-Filter - All other networks are denied"); 
+                    j4log.log(Level.INFO, "IP-Filter - All other networks are denied");
+                }
             }
             sessionFilter=rif;
             listenerFactory.setSessionFilter(sessionFilter);
@@ -223,6 +230,13 @@ public class PjFtpServer extends javax.swing.JFrame {
         if (ConfigFTP.ipFilterEnabled) {
             j4log.log(Level.INFO, "IP-Filter Network = "+ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix);
             j4log.log(Level.INFO, "IP-Filter Network Type = "+ConfigFTP.aclType);
+            if (ConfigFTP.aclType.trim().equals("deny")) { 
+                System.out.println("IP-Filter - All other networks are allowed");
+                j4log.log(Level.INFO, "IP-Filter - All other networks are allowed");
+            } else {
+                System.out.println("IP-Filter - All other networks are denied"); 
+                j4log.log(Level.INFO, "IP-Filter - All other networks are denied");
+            }            
         }
         running = true;
         if (args.length == 0) {
