@@ -730,7 +730,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                 btnToggleRunStop.setText("Stop server");
                 setBooleanBtnTf(false);
             } catch (FtpException | FtpServerConfigurationException fe) {
-                JOptionPane.showMessageDialog(frame, "Some wrong !", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Some wrong or IP-address:Port already in use !", "Error", JOptionPane.ERROR_MESSAGE);
                 btnToggleRunStop.setSelected(false);
             }
         }
