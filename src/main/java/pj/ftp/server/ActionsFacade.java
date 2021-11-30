@@ -61,8 +61,11 @@ public class ActionsFacade {
     };    
     
     static {
-        speedMap.put("0,1 Mbyte/s=0,8 Mbit/s", 100_000);
+        //speedMap.put("0,1 Mbyte/s=0,8 Mbit/s", 100_000);
+        //speedMap.put("0,2 Mbyte/s=1,6 Mbit/s", 200_000);
+        speedMap.put("0,5 Mbyte/s=4 Mbit/s", 500_000);
         speedMap.put("1 Mbyte/s=8 Mbit/s", 1_000_000);
+        speedMap.put("1,5 Mbyte/s=12 Mbit/s", 1_500_000);
         speedMap.put("10 Mbyte/s=80 Mbit/s", 10_000_000);
         speedMap.put("100 Mbyte/s=800 Mbit/s", 100_000_000);
         speedMap.put("125 Mbyte/s=1000 Mbit/s", 125_000_000);

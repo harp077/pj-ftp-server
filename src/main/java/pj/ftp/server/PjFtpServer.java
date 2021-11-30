@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.BindException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -916,8 +917,8 @@ public class PjFtpServer extends javax.swing.JFrame {
                 try {
                     startServer(args);
                 } catch (FtpException | FtpServerConfigurationException ex) {
-                    java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                    System.out.println("\nNOT run !\nSome of parameters wrong !");
+                    //java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    System.out.println("\nNOT run !\nSome of parameters are wrong or IP-address:Port already in use !");
                     //ActionsFacade.useExamples();                    
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException ne) {
