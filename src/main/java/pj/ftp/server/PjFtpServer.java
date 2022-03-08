@@ -76,45 +76,68 @@ public class PjFtpServer extends javax.swing.JFrame {
         //
         this.comboMaxLogins.setModel(new DefaultComboBoxModel<>(ActionsFacade.loginsArray));
         this.comboMaxLogins.setEditable(false);
-        this.comboMaxLogins.setSelectedItem("100");
-        ConfigFTP.MAX_THREADS_LOGINS=Integer.parseInt(comboMaxLogins.getSelectedItem().toString());        
-        System.out.println("Max concurrent Logins = "+ConfigFTP.MAX_THREADS_LOGINS);
+        //this.comboMaxLogins.setSelectedItem("100");
+        //ConfigFTP.MAX_THREADS_LOGINS=Integer.parseInt(comboMaxLogins.getSelectedItem().toString());        
+        //System.out.println("Max concurrent Logins = "+ConfigFTP.MAX_THREADS_LOGINS);
         //
         this.comboMaxLoginsPerIP.setModel(new DefaultComboBoxModel<>(ActionsFacade.loginsArrayPerIP));
         this.comboMaxLoginsPerIP.setEditable(false);
         this.comboMaxLoginsPerIP.setSelectedItem("3");
-        ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(comboMaxLoginsPerIP.getSelectedItem().toString());        
-        System.out.println("Max concurrent Logins Per IP = "+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
+        //ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(comboMaxLoginsPerIP.getSelectedItem().toString());        
+        //System.out.println("Max concurrent Logins Per IP = "+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
         // 
         this.comboWritable.setModel(new DefaultComboBoxModel<>(ActionsFacade.writableArray));
-        this.comboWritable.setEditable(false);
-        ConfigFTP.writable=Boolean.parseBoolean(comboWritable.getSelectedItem().toString());
-        System.out.println("Writable = "+ConfigFTP.writable); 
+        //this.comboWritable.setEditable(false);
+        //ConfigFTP.writable=Boolean.parseBoolean(comboWritable.getSelectedItem().toString());
+        //System.out.println("Writable = "+ConfigFTP.writable); 
         // 
         this.comboPrefixMask.setModel(new DefaultComboBoxModel<>(ActionsFacade.aclNetPrefixMaskArray));
-        this.comboPrefixMask.setEditable(false);
-        ConfigFTP.aclNetPrefix=comboPrefixMask.getSelectedItem().toString().trim();
+        //this.comboPrefixMask.setEditable(false);
+        //ConfigFTP.aclNetPrefix=comboPrefixMask.getSelectedItem().toString().trim();
         //System.out.println("IP-Filter Network = "+ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
         //    
         this.comboTypeACL.setModel(new DefaultComboBoxModel<>(ActionsFacade.aclTypeArray));
-        this.comboTypeACL.setEditable(false);
-        ConfigFTP.aclType=comboTypeACL.getSelectedItem().toString().trim();
+        //this.comboTypeACL.setEditable(false);
+        //ConfigFTP.aclType=comboTypeACL.getSelectedItem().toString().trim();
         //System.out.println("IP-Filter Network Type = "+ConfigFTP.aclType); 
         //
         this.comboListenIP.setModel(new DefaultComboBoxModel<>(ActionsFacade.listLocalIpAddr().stream().toArray(String[]::new))); 
-        this.comboListenIP.setEditable(false);
+        //this.comboListenIP.setEditable(false);
         this.taLog.setBackground(Color.BLACK);
         this.taLog.setForeground(Color.CYAN);
         this.tfFolder.setEditable(false);
-        this.tfAclNetAdres.setText(ICFG.aclNetDefaultAddress);
+        //this.tfAclNetAdres.setText(ICFG.aclNetDefaultAddress);
         //this.tfAllowNet.setSize(77, 24);
         this.tfAclNetAdres.setMaximumSize(ICFG.tfAclNetSize);
         this.tfAclNetAdres.setMinimumSize(ICFG.tfAclNetSize);
         this.tfAclNetAdres.setPreferredSize(ICFG.tfAclNetSize);
-        tfAclNetAdres.setEnabled(false);
-        comboPrefixMask.setEnabled(false); 
-        comboTypeACL.setEnabled(false);
-        btnAclNetIpData.setEnabled(false);
+        //
+        ConfigFTP.loadCFGfromFile();
+        tfAclNetAdres.setText(ConfigFTP.aclNetAddress);
+        comboPrefixMask.setSelectedItem(Arrays.asList(ActionsFacade.aclNetPrefixMaskArray).stream().filter(x -> x.contains(ConfigFTP.aclNetPrefix)).findAny().get());
+        System.out.println("=============="+Arrays.asList(ActionsFacade.aclNetPrefixMaskArray).stream().filter(x -> x.contains(ConfigFTP.aclNetPrefix)).findAny().get());
+        //comboTypeACL.setModel(new DefaultComboBoxModel<>(ActionsFacade.aclTypeArray));
+        if (ConfigFTP.ipFilterEnabled) {
+            checkBoxIpFilter.setSelected(true);
+            tfAclNetAdres.setEnabled(true);
+            comboPrefixMask.setEnabled(true); 
+            comboTypeACL.setEnabled(true);
+            btnAclNetIpData.setEnabled(true);
+        } else {
+            checkBoxIpFilter.setSelected(false);
+            tfAclNetAdres.setEnabled(false);
+            comboPrefixMask.setEnabled(false); 
+            comboTypeACL.setEnabled(false);
+            btnAclNetIpData.setEnabled(false);            
+        }
+        comboWritable.setSelectedItem(""+ConfigFTP.writable);
+        comboMaxLogins.setSelectedItem(""+ConfigFTP.MAX_CONCURRENT_LOGINS);
+        comboMaxLoginsPerIP.setSelectedItem(""+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
+        comboTypeACL.setSelectedItem(ConfigFTP.aclType);
+        if (ConfigFTP.username.equals("anonymous")) checkBoxAnonymous.setSelected(true);
+        if (ActionsFacade.listLocalIpAddr().contains(ConfigFTP.listenIP)) comboListenIP.setSelectedItem(ConfigFTP.listenIP);
+        tfUser.setText(ConfigFTP.username);
+        tfPassw.setText(ConfigFTP.password);
         tfFolder.setText(ConfigFTP.folder);
         tfPort.setText(ConfigFTP.port);
     }
@@ -296,18 +319,18 @@ public class PjFtpServer extends javax.swing.JFrame {
             new SubnetUtils(ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix);
             return true;
         } catch (IllegalArgumentException iae) {
-            JOptionPane.showMessageDialog(frame, "Wrong Network IP-address ! = "+tfAclNetAdres.getText().trim()+comboPrefixMask.getSelectedItem().toString().trim().split("=")[0], "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "checkAclNetwork Wrong Network IP-address ! = "+tfAclNetAdres.getText().trim()+comboPrefixMask.getSelectedItem().toString().trim().split("=")[0], "Error", JOptionPane.ERROR_MESSAGE);
             //btnToggleRunStop.setSelected(false);
             ConfigFTP.aclNetAddress = ICFG.aclNetDefaultAddress;
-            System.out.println("ConfigFTP.allowNetAddress = "+ConfigFTP.aclNetAddress);
+            System.out.println("checkAclNetwork ConfigFTP.aclNetAddress = "+ConfigFTP.aclNetAddress);
             ConfigFTP.aclNetPrefix = ICFG.aclNetDefaultPrefix;
-            System.out.println("ConfigFTP.allowNetPrefix = "+ConfigFTP.aclNetPrefix);
+            System.out.println("checkAclNetwork ConfigFTP.aclNetPrefix = "+ConfigFTP.aclNetPrefix);
             ConfigFTP.aclType = ICFG.aclTypeDefault;
-            System.out.println("ConfigFTP.aclType = " + ConfigFTP.aclType); 
+            System.out.println("checkAclNetwork ConfigFTP.aclType = " + ConfigFTP.aclType); 
             comboTypeACL.setSelectedItem(ConfigFTP.aclType);
-            System.out.println("comboPrefixMask.setSelectedItem = "+Arrays.asList(ActionsFacade.aclNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.aclNetPrefix)).findFirst());
+            System.out.println("checkAclNetwork comboPrefixMask.setSelectedItem = "+Arrays.asList(ActionsFacade.aclNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.aclNetPrefix)).findAny().get());
             // BEZ .orElse("/32=255.255.255.255") NOT WORK !!!!!!
-            comboPrefixMask.setSelectedItem(Arrays.asList(ActionsFacade.aclNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.aclNetPrefix)).findFirst().orElse("/32=255.255.255.255"));
+            comboPrefixMask.setSelectedItem(Arrays.asList(ActionsFacade.aclNetPrefixMaskArray).stream().filter(x->x.contains(ConfigFTP.aclNetPrefix)).findAny().get());
             //System.out.println("tfAllowNet.isEditable() = "+tfAllowNet.isEditable());
             //System.out.println("tfAllowNet.isEnabled() = "+tfAllowNet.isEnabled());
             tfAclNetAdres.setText(ConfigFTP.aclNetAddress);
@@ -503,7 +526,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jLabel9.setText("Network-");
         jToolBar3.add(jLabel9);
 
-        comboTypeACL.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1" }));
+        comboTypeACL.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "allow", "deny", " " }));
         comboTypeACL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboTypeACLActionPerformed(evt);
@@ -515,10 +538,10 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar3.add(jLabel10);
 
         tfAclNetAdres.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        tfAclNetAdres.setText("10.0.0.0");
+        tfAclNetAdres.setText("9.9.9.9");
         jToolBar3.add(tfAclNetAdres);
 
-        comboPrefixMask.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 111" }));
+        comboPrefixMask.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "/32=255.255.255.255", " " }));
         comboPrefixMask.setToolTipText("");
         comboPrefixMask.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -584,7 +607,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar2.add(jSeparator3);
 
         btnSaveToCmdCfg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/save-16.png"))); // NOI18N
-        btnSaveToCmdCfg.setText("Make CMD-config");
+        btnSaveToCmdCfg.setText("Save Config");
         btnSaveToCmdCfg.setToolTipText("Save this config to cmd-mode-config.properties");
         btnSaveToCmdCfg.setFocusable(false);
         btnSaveToCmdCfg.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -801,8 +824,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         ConfigFTP.aclNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
         ConfigFTP.aclType=comboTypeACL.getSelectedItem().toString().trim();
         checkAclNetwork();
-        System.out.println("IP-Filter Network = " + ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
-        System.out.println("IP-Filter Type = " + ConfigFTP.aclType.toUpperCase());
+        System.out.println("comboPrefixMaskActionPerformed IP-Filter Network = " + ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
+        System.out.println("comboPrefixMaskActionPerformed IP-Filter Type = " + ConfigFTP.aclType);
         if (ConfigFTP.aclType.trim().equals("deny"))  
             System.out.println("IP-Filter:  All other networks are allowed");
         else 
@@ -810,14 +833,14 @@ public class PjFtpServer extends javax.swing.JFrame {
     }//GEN-LAST:event_comboPrefixMaskActionPerformed
 
     private void checkBoxIpFilterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkBoxIpFilterItemStateChanged
-        if (ConfigFTP.ipFilterEnabled) {
-            ConfigFTP.ipFilterEnabled=false;
+        if (!checkBoxIpFilter.isSelected()) {
+            checkBoxIpFilter.setSelected(false);
             tfAclNetAdres.setEnabled(false);
             comboPrefixMask.setEnabled(false); 
             comboTypeACL.setEnabled(false);
             btnAclNetIpData.setEnabled(false);
         } else {
-            ConfigFTP.ipFilterEnabled=true;
+            checkBoxIpFilter.setSelected(true);
             tfAclNetAdres.setEnabled(true);
             comboPrefixMask.setEnabled(true); 
             comboTypeACL.setEnabled(true); 
@@ -852,8 +875,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         ConfigFTP.aclNetAddress=tfAclNetAdres.getText().trim();
         ConfigFTP.aclNetPrefix=comboPrefixMask.getSelectedItem().toString().split("=")[0].trim();
         checkAclNetwork();
-        System.out.println("IP-Filter Network = " + ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
-        System.out.println("IP-Filter Type = " + ConfigFTP.aclType.toUpperCase());
+        System.out.println("comboTypeACLActionPerformed IP-Filter Network = " + ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix); 
+        System.out.println("comboTypeACLActionPerformed IP-Filter Type = " + ConfigFTP.aclType);
         if (ConfigFTP.aclType.trim().equals("deny"))  
             System.out.println("IP-Filter:  All other networks are allowed");
         else 

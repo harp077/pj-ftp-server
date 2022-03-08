@@ -52,7 +52,7 @@ public class ConfigFTP {
             aclNetAddress=prop.getProperty("ip.filter.network.address", "10.0.0.0").trim();
             aclNetPrefix=prop.getProperty("ip.filter.network.prefix", "/8").trim();
             aclType=prop.getProperty("ip.filter.type", ICFG.aclTypeDefault).trim();
-            
+            printCFG();
         } catch (IOException ex) {
             Logger.getLogger(ConfigFTP.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -90,12 +90,30 @@ public class ConfigFTP {
             prop.setProperty("max.concurrent.logins", frame.comboMaxLogins.getSelectedItem().toString().trim());
             prop.setProperty("max.concurrent.logins.per.ip",frame.comboMaxLoginsPerIP.getSelectedItem().toString().trim()); 
             
-            prop.store(output, " terminal cmd-mode-config for run in CMD-mode:");
-            
+            prop.store(output, " config");
+            System.out.println(prop);
+            loadCFGfromFile();
+            printCFG();
         } catch (IOException ex) {
             Logger.getLogger(ConfigFTP.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }  
+    
+    public static void printCFG() {
+            System.out.println("======== print CFG =========\nlistenIP = "+listenIP);
+            System.out.println("user = "+username);
+            System.out.println("passw = "+password);//prop.getProperty("password", "jer@sey.com").trim();
+            System.out.println("port = "+port);//=prop.getProperty("port", ICFG.DEFAULT_PORT).trim();
+            System.out.println("folder = "+folder);//=prop.getProperty("folder", FileUtils.getTempDirectoryPath()).trim();
+            System.out.println("writable = "+writable);//=Boolean.parseBoolean(prop.getProperty("writable", "true").trim());
+            System.out.println("max-logins = "+MAX_CONCURRENT_LOGINS);//=Integer.parseInt(prop.getProperty("max.concurrent.logins", "10").trim());
+            System.out.println("max-logins-per-ip = "+MAX_CONCURRENT_LOGINS_PER_IP);//=Integer.parseInt(prop.getProperty("max.concurrent.logins.per.ip", "3").trim());
+            System.out.println("threads = " + MAX_THREADS_LOGINS);//=MAX_CONCURRENT_LOGINS;
+            System.out.println("acl-enable = "+ipFilterEnabled);//=Boolean.parseBoolean(prop.getProperty("ip.filter.enabled", "true").trim());
+            System.out.println("acl-adres = "+aclNetAddress);//=prop.getProperty("ip.filter.network.address", "10.0.0.0").trim();
+            System.out.println("acl-prefix = "+aclNetPrefix);//=prop.getProperty("ip.filter.network.prefix", "/8").trim();
+            System.out.println("acl-type = "+aclType);//=prop.getProperty("ip.filter.type", ICFG.aclTypeDefault).trim();        
+    }
     
 }
