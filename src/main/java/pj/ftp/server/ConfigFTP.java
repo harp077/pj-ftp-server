@@ -52,8 +52,22 @@ public class ConfigFTP {
             aclNetAddress=prop.getProperty("ip.filter.network.address", "10.0.0.0").trim();
             aclNetPrefix=prop.getProperty("ip.filter.network.prefix", "/8").trim();
             aclType=prop.getProperty("ip.filter.type", ICFG.aclTypeDefault).trim();
-            printCFG();
+            printCFG("printCFG: loadCFGfromFile()");
         } catch (IOException ex) {
+            listenIP="127.0.0.1";
+            username="anonymous";
+            password="jer@sey.com";
+            port=ICFG.DEFAULT_PORT;
+            folder=FileUtils.getTempDirectoryPath().trim();
+            writable=true;
+            MAX_CONCURRENT_LOGINS=10;
+            MAX_CONCURRENT_LOGINS_PER_IP=3;
+            MAX_THREADS_LOGINS=MAX_CONCURRENT_LOGINS;
+            ipFilterEnabled=true;
+            aclNetAddress="10.0.0.0";
+            aclNetPrefix="/8";
+            aclType=ICFG.aclTypeDefault;
+            printCFG("printCFG: loadCFGfromFile() Exception !");          
             Logger.getLogger(ConfigFTP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -93,15 +107,15 @@ public class ConfigFTP {
             prop.store(output, " config");
             System.out.println(prop);
             loadCFGfromFile();
-            printCFG();
+            printCFG("printCFG: saveCFGfromGUI()");
         } catch (IOException ex) {
             Logger.getLogger(ConfigFTP.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }  
     
-    public static void printCFG() {
-            System.out.println("======== print CFG =========\nlistenIP = "+listenIP);
+    public static void printCFG(String top) {
+            System.out.println("======== " + top + " =========\nlistenIP = "+listenIP);
             System.out.println("user = "+username);
             System.out.println("passw = "+password);//prop.getProperty("password", "jer@sey.com").trim();
             System.out.println("port = "+port);//=prop.getProperty("port", ICFG.DEFAULT_PORT).trim();

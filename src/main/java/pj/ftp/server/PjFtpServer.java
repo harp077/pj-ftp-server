@@ -115,7 +115,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         ConfigFTP.loadCFGfromFile();
         tfAclNetAdres.setText(ConfigFTP.aclNetAddress);
         comboPrefixMask.setSelectedItem(Arrays.asList(ActionsFacade.aclNetPrefixMaskArray).stream().filter(x -> x.contains(ConfigFTP.aclNetPrefix)).findAny().get());
-        System.out.println("=============="+Arrays.asList(ActionsFacade.aclNetPrefixMaskArray).stream().filter(x -> x.contains(ConfigFTP.aclNetPrefix)).findAny().get());
+        //System.out.println("=============="+Arrays.asList(ActionsFacade.aclNetPrefixMaskArray).stream().filter(x -> x.contains(ConfigFTP.aclNetPrefix)).findAny().get());
         //comboTypeACL.setModel(new DefaultComboBoxModel<>(ActionsFacade.aclTypeArray));
         if (ConfigFTP.ipFilterEnabled) {
             checkBoxIpFilter.setSelected(true);
@@ -133,7 +133,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         comboWritable.setSelectedItem(""+ConfigFTP.writable);
         comboMaxLogins.setSelectedItem(""+ConfigFTP.MAX_CONCURRENT_LOGINS);
         comboMaxLoginsPerIP.setSelectedItem(""+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
-        comboTypeACL.setSelectedItem(ConfigFTP.aclType);
+        //comboTypeACL.setSelectedItem(ConfigFTP.aclType);
         if (ConfigFTP.username.equals("anonymous")) checkBoxAnonymous.setSelected(true);
         if (ActionsFacade.listLocalIpAddr().contains(ConfigFTP.listenIP)) comboListenIP.setSelectedItem(ConfigFTP.listenIP);
         tfUser.setText(ConfigFTP.username);
@@ -900,6 +900,8 @@ public class PjFtpServer extends javax.swing.JFrame {
                 @Override
                 public void run() {                    
                     frame = new PjFtpServer();
+                    ConfigFTP.loadCFGfromFile();
+                    comboTypeACL.setSelectedItem(ConfigFTP.aclType);
                     ActionsFacade.InstallLF();
                     ActionsFacade.setLF(frame);
                     frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
