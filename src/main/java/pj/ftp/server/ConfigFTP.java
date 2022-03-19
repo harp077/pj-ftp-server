@@ -48,7 +48,7 @@ public class ConfigFTP {
             MAX_CONCURRENT_LOGINS=Integer.parseInt(prop.getProperty("max.concurrent.logins", "10").trim());
             MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(prop.getProperty("max.concurrent.logins.per.ip", "3").trim());
             MAX_THREADS_LOGINS=MAX_CONCURRENT_LOGINS;
-            ipFilterEnabled=Boolean.parseBoolean(prop.getProperty("ip.filter.enabled", "true").trim());
+            ipFilterEnabled=Boolean.parseBoolean(prop.getProperty("ip.filter.enabled", "false").trim());
             aclNetAddress=prop.getProperty("ip.filter.network.address", "10.0.0.0").trim();
             aclNetPrefix=prop.getProperty("ip.filter.network.prefix", "/8").trim();
             aclType=prop.getProperty("ip.filter.type", ICFG.aclTypeDefault).trim();
@@ -63,7 +63,7 @@ public class ConfigFTP {
             MAX_CONCURRENT_LOGINS=10;
             MAX_CONCURRENT_LOGINS_PER_IP=3;
             MAX_THREADS_LOGINS=MAX_CONCURRENT_LOGINS;
-            ipFilterEnabled=true;
+            ipFilterEnabled=false;
             aclNetAddress="10.0.0.0";
             aclNetPrefix="/8";
             aclType=ICFG.aclTypeDefault;
