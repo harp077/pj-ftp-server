@@ -133,6 +133,7 @@ public class ActionsFacade {
     
     public static List<String> listLocalIpAddr () {
         List<String> listListenIP = new ArrayList<>();
+		listListenIP.add(PjFtpServer.DEFAULT_IP);
         Enumeration<NetworkInterface> enumerationNI = null;
         try {
             enumerationNI = NetworkInterface.getNetworkInterfaces();
