@@ -62,7 +62,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         } catch (Exception ignore) { ignore.printStackTrace(); }
     } */
 
-	public static final String DEFAULT_IP = "default";
+	public static final String DEFAULT_IP = "all";
 	
     public PjFtpServer() {
         initComponents();
