@@ -61,7 +61,9 @@ public class PjFtpServer extends javax.swing.JFrame {
             jul = java.util.logging.Logger.getLogger(FTPTestServer.class.getName());
         } catch (Exception ignore) { ignore.printStackTrace(); }
     } */
-    
+
+	public static final String DEFAULT_IP = "default";
+	
     public PjFtpServer() {
         initComponents();
         ImageIcon icone = new ImageIcon(getClass().getResource("/img/top-frame-triangle-16.png"));
@@ -187,7 +189,9 @@ public class PjFtpServer extends javax.swing.JFrame {
         
         ListenerFactory listenerFactory = new ListenerFactory();
         listenerFactory.setPort(Integer.parseInt(ConfigFTP.port));
-        listenerFactory.setServerAddress(ConfigFTP.listenIP);
+		if (!DEFAULT_IP.equals(ConfigFTP.listenIP))
+			listenerFactory.setServerAddress(ConfigFTP.listenIP);
+		// else all interfaces
         listenerFactory.setIdleTimeout(ConfigFTP.MAX_IDLE_TIME);
         j4log.log(Level.INFO, "pj-ftp-server try to start");
         j4log.log(Level.INFO, "try to start at = " + ICFG.sdtf.format(new Date()));
@@ -725,11 +729,12 @@ public class PjFtpServer extends javax.swing.JFrame {
             btnToggleRunStop.setSelected(false);
             return;
         }
-        if (!ICFG.ipv.isValid(comboListenIP.getSelectedItem().toString().trim()))  {
-            JOptionPane.showMessageDialog(frame, "Wrong listen IP-address !", "Error", JOptionPane.ERROR_MESSAGE);
-            btnToggleRunStop.setSelected(false);
-            return;            
-        }
+		if (!DEFAULT_IP.equals(comboListenIP.getSelectedItem().toString()))
+			if (!ICFG.ipv.isValid(comboListenIP.getSelectedItem().toString().trim()))  {
+				JOptionPane.showMessageDialog(frame, "Wrong listen IP-address !", "Error", JOptionPane.ERROR_MESSAGE);
+				btnToggleRunStop.setSelected(false);
+				return;            
+			}
         if (!checkAclNetwork()) return;
         ImageIcon iconOn = new ImageIcon(getClass().getResource("/img/go-green-krug-16.png"));
         ImageIcon iconOf = new ImageIcon(getClass().getResource("/img/stop-16.png"));
@@ -753,7 +758,12 @@ public class PjFtpServer extends javax.swing.JFrame {
                 btnToggleRunStop.setText("Stop server");
                 setBooleanBtnTf(false);
             } catch (FtpException | FtpServerConfigurationException fe) {
-                JOptionPane.showMessageDialog(frame, "Some wrong or IP-address:Port already in use !", "Error", JOptionPane.ERROR_MESSAGE);
+				String errorMessage = fe.getMessage();
+				String OS = System.getProperty("os.name").toLowerCase();
+				if ((OS.contains("nix") || OS.contains("nux") || OS.contains("aix")) && Integer.valueOf(ConfigFTP.port) < 1024)
+					errorMessage = errorMessage + "\n" + "Beware, user privileges needed under Linux/Unix for port < 1024";
+				errorMessage = errorMessage + "\n" + "Check if port is already in use !";
+                JOptionPane.showMessageDialog(frame, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
                 btnToggleRunStop.setSelected(false);
             }
         }
@@ -929,7 +939,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                 //
                 ConfigFTP.loadCFGfromFile();
                 //
-                if (!ICFG.ipv.isValid(ConfigFTP.listenIP))  {
+                if (!DEFAULT_IP.equals(ConfigFTP.listenIP) && !ICFG.ipv.isValid(ConfigFTP.listenIP))  {
                     System.out.println("Wrong listen IP ! \nExit !"); 
                     //ActionsFacade.useExamples();
                     return;
