@@ -1,4 +1,5 @@
 ![ftp](pj-ftp-server.png?raw=true)
+![ftp-speed](ftp-srv-best-speed_16-07-22.png?raw=true)
 Pure Java FTP server. Free portable cross-platform.
 Run as root/admin !
 1) Fully multi-threaded.
