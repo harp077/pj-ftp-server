@@ -1,5 +1,7 @@
 ![ftp](pj-ftp-server.png?raw=true)
+In snap below speed is in MByte/sec ( Mbyte/sec = 8 Mbit/sec)! 
 ![ftp-speed](ftp-srv-best-speed_16-07-22.png?raw=true)
+In snap above speed is in MByte/sec ( Mbyte/sec = 8 Mbit/sec)! 
 Pure Java FTP server. Free portable cross-platform.
 Run as root/admin !
 1) Fully multi-threaded.
