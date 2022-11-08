@@ -410,6 +410,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(800, 500));
         setSize(new java.awt.Dimension(800, 500));
+        getContentPane().setLayout(new java.awt.BorderLayout());
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("parameters and actions"));
         jPanel1.setLayout(new java.awt.BorderLayout());
@@ -418,7 +419,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar1.setFloatable(false);
         jToolBar1.add(jSeparator7);
 
-        jLabel8.setText("Writable:");
+        jLabel8.setText("Writable=");
         jToolBar1.add(jLabel8);
 
         comboWritable.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 111" }));
@@ -430,7 +431,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar1.add(comboWritable);
         jToolBar1.add(jSeparator19);
 
-        jLabel4.setText("Listen IP:");
+        jLabel4.setText("Listen IP=");
         jToolBar1.add(jLabel4);
 
         comboListenIP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "127.0.0.1" }));
@@ -442,19 +443,19 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar1.add(comboListenIP);
         jToolBar1.add(jSeparator12);
 
-        jLabel1.setText("Port:");
+        jLabel1.setText("Port=");
         jToolBar1.add(jLabel1);
 
         tfPort.setText("21");
         jToolBar1.add(tfPort);
         jToolBar1.add(jSeparator1);
 
-        jLabel2.setText("User:");
+        jLabel2.setText("User=");
         jToolBar1.add(jLabel2);
         jToolBar1.add(tfUser);
         jToolBar1.add(jSeparator2);
 
-        jLabel3.setText("Password:");
+        jLabel3.setText("Password=");
         jToolBar1.add(jLabel3);
         jToolBar1.add(tfPassw);
         jToolBar1.add(jSeparator4);
@@ -488,7 +489,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar3.setFloatable(false);
         jToolBar3.add(jSeparator6);
 
-        jLabel5.setText("MAX speed:");
+        jLabel5.setText("MAX speed=");
         jToolBar3.add(jLabel5);
 
         comboSpeed.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 111" }));
@@ -501,7 +502,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar3.add(comboSpeed);
         jToolBar3.add(jSeparator15);
 
-        jLabel6.setText("MAX logins:");
+        jLabel6.setText("MAX logins=");
         jLabel6.setToolTipText("Max concurrent Logins");
         jToolBar3.add(jLabel6);
 
@@ -514,7 +515,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         jToolBar3.add(comboMaxLogins);
         jToolBar3.add(jSeparator16);
 
-        jLabel7.setText("Max login per IP:");
+        jLabel7.setText("Max login per IP=");
         jLabel7.setToolTipText("Max concurrent Logins per IP");
         jToolBar3.add(jLabel7);
 
@@ -538,11 +539,11 @@ public class PjFtpServer extends javax.swing.JFrame {
         });
         jToolBar3.add(comboTypeACL);
 
-        jLabel10.setText("=");
+        jLabel10.setText(" = ");
         jToolBar3.add(jLabel10);
 
         tfAclNetAdres.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        tfAclNetAdres.setText("9.9.9.9");
+        tfAclNetAdres.setText("1.1.1.1");
         jToolBar3.add(tfAclNetAdres);
 
         comboPrefixMask.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "/32=255.255.255.255", " " }));

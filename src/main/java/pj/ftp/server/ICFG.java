@@ -10,8 +10,8 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 
 public class ICFG {
     
-    public static int FW = 970;
-    public static int FH = 400;
+    public static int FW = 990;
+    public static int FH = 520;
     public static InetAddressValidator ipv = InetAddressValidator.getInstance();
     public static String aclNetDefaultAddress = "10.0.0.0";
     public static String aclNetDefaultPrefix = "/8";
