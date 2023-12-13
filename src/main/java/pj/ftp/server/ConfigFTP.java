@@ -21,7 +21,7 @@ public class ConfigFTP {
     public static String port=ICFG.DEFAULT_PORT;
     public static int MAX_CONCURRENT_LOGINS = 10;
     public static int MAX_CONCURRENT_LOGINS_PER_IP = 3;
-    public static int MAX_IDLE_TIME = 900;
+    public static int MAX_IDLE_TIME = 999;
     public static int MAX_THREADS_LOGINS = 100;
     public static int MAX_SPEED = 125_000_000;// = Integer.MAX_VALUE;99_999;//Integer.MAX_VALUE; = in Kbit/sek !!
     public static Boolean writable = true;

@@ -249,7 +249,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         }
         j4log.log(Level.INFO, "Max concurrent Logins = "+connectionConfig.getMaxLogins());
         j4log.log(Level.INFO, "Max concurrent Logins per IP = "+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
-        j4log.log(Level.INFO, "Server Listen Address = "+listenerFactory.getServerAddress());
+        j4log.log(Level.INFO, ("Server Listen Address = "+listenerFactory.getServerAddress()).replace(" null", " all"));
         j4log.log(Level.INFO, "Server Listen Port = "+listenerFactory.getPort());
         j4log.log(Level.INFO, "Server Idle TimeOut = "+listenerFactory.getIdleTimeout() + " sec");
         j4log.log(Level.INFO, "Writable = "+ConfigFTP.writable);
@@ -920,7 +920,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                     JDialog.setDefaultLookAndFeelDecorated(true);
                     JOptionPane.setRootFrame(frame);
                     frame.setSize(ICFG.FW, ICFG.FH);
-                    frame.setLocation(50, 50);
+                    frame.setLocation(222, 222);
                     frame.setResizable(true);
                     frame.setVisible(true);
                 }

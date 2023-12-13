@@ -69,6 +69,7 @@ public class ActionsFacade {
         speedMap.put("10 Mbyte/s=80 Mbit/s", 10_000_000);
         speedMap.put("100 Mbyte/s=800 Mbit/s", 100_000_000);
         speedMap.put("125 Mbyte/s=1000 Mbit/s", 125_000_000);
+        speedMap.put("1250 Mbyte/s=10000 Mbit/s", 1250_000_000);
         //
         aclTypeMap.put("allow", IpFilterType.ALLOW);
         aclTypeMap.put("deny",  IpFilterType.DENY);        
@@ -94,7 +95,7 @@ public class ActionsFacade {
         SubnetUtils su = new SubnetUtils(ipadr);
         //su=new SubnetUtils("10.73.2.111/23");
         //su=new SubnetUtils("10.73.2.111", "255.255.254.0");
-        String result = "\n IP-data for "+ConfigFTP.aclType.toUpperCase()+" Network:\n";
+        String result   = "\n IP-data for "+ConfigFTP.aclType.toUpperCase()+" Network:\n";
         result = result + "\n Low Address = " + su.getInfo().getLowAddress();
         result = result + "\n High Address = " + su.getInfo().getHighAddress();        
         result = result + "\n Broadcast Address = " + su.getInfo().getBroadcastAddress();
@@ -162,22 +163,19 @@ public class ActionsFacade {
                 + "\n Run as root (Linux) or admin (Windows) !"
                 + "\n 1) Fully multi-threaded."
                 + "\n 2) Multi platform support."
-                + "\n 3) High speed - up to 920 Mbit/s (115 Mbyte/s) on 1Gbit/s channel when used SSD-drives on both sides. "               
-                + "\n 4) Can run in GUI-mode:  # java -jar pj-ftp-server.jar"
-                + "\n 5) Can run in CMD-mode (use cmd-mode-config.properties):  # java -jar pj-ftp-server.jar cmd"
-                + "\n 6) IP-filter (access list) support."
-                + "\n 7) Writable=true/false support."
-                + "\n 8) Support listening on different local interfaces."
-                + "\n 9) Speed limit support."
-                + "\n 10) Anonymous-mode support."
-                + "\n 11) Different free TCP-ports support."
-                + "\n 12) Folder-select support."
-                + "\n 13) Logging support."
-                + "\n 14) Support limit max concurrent logins."
-                + "\n 15) Support limit max concurrent logins per IP."               
-                + "\n 16) Need JRE-1.8." 
-                + "\n Create by Roman Koldaev, "
-                + "\n Saratov city, Russia. "
+                + "\n 3) Can run in GUI-mode:  # java -jar pj-ftp-server.jar"
+                + "\n 4) Can run in CMD-mode (use cmd-mode-config.properties):  # java -jar pj-ftp-server.jar cmd"
+                + "\n 5) IP-filter (access list) support."
+                + "\n 6) Writable=true/false support."
+                + "\n 7) Support listening on different local interfaces."
+                + "\n 8) Speed limit support."
+                + "\n 9) Anonymous-mode support."
+                + "\n 10) Different TCP-ports support."
+                + "\n 11) Logging support."
+                + "\n 12) Support limit max concurrent logins."
+                + "\n 13) Support limit max concurrent logins per IP."               
+                + "\n 14) Need JRE-1.8." 
+                + "\n Roman Koldaev, Saratov city, Russia."
                 + "\n mail: harp07@mail.ru "
                 + "\n SourceForge: https://sf.net/u/harp07/profile/ "
                 + "\n GitHub: https://github.com/harp077/ "; 

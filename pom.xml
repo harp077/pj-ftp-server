@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>my.harp07</groupId>
     <artifactId>pj-ftp-server</artifactId>
-    <version>1.0.98</version>
+    <version>1.0.99</version>
     <packaging>jar</packaging>
     
     <properties>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
-            <version>1.7</version>
+            <version>1.8.0</version>
         </dependency> 
         
         <dependency>
