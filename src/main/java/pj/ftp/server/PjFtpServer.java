@@ -51,7 +51,8 @@ public class PjFtpServer extends javax.swing.JFrame {
     public static PjFtpServer frame;
     //public static Map<String, String> argsHM = new HashMap<String, String>();
     //public static Thread Log_Thread;
-    public static SessionFilter sessionFilter;
+    //public static SessionFilter sessionFilter;
+    public static RemoteIpFilter rif;
 
     //public static List<String> listListenIP = new ArrayList<>();
 
@@ -62,7 +63,7 @@ public class PjFtpServer extends javax.swing.JFrame {
         } catch (Exception ignore) { ignore.printStackTrace(); }
     } */
 
-	public static final String DEFAULT_IP = "all";
+    public static final String DEFAULT_IP = "all";
 	
     public PjFtpServer() {
         initComponents();
@@ -72,19 +73,19 @@ public class PjFtpServer extends javax.swing.JFrame {
         //
         this.comboSpeed.setModel(new DefaultComboBoxModel<>(ActionsFacade.speedMap.keySet().stream().sorted().toArray(String[]::new)));
         this.comboSpeed.setEditable(false);
-        this.comboSpeed.setSelectedItem("125 Mbyte/s=1000 Mbit/s");
+        this.comboSpeed.setSelectedItem("1250 Mbyte/s=10000 Mbit/s");
         ConfigFTP.MAX_SPEED=ActionsFacade.speedMap.get(comboSpeed.getSelectedItem().toString());
         System.out.println(maxSpeedString()); 
         //
         this.comboMaxLogins.setModel(new DefaultComboBoxModel<>(ActionsFacade.loginsArray));
         this.comboMaxLogins.setEditable(false);
-        //this.comboMaxLogins.setSelectedItem("100");
+        this.comboMaxLogins.setSelectedItem("80");
         //ConfigFTP.MAX_THREADS_LOGINS=Integer.parseInt(comboMaxLogins.getSelectedItem().toString());        
         //System.out.println("Max concurrent Logins = "+ConfigFTP.MAX_THREADS_LOGINS);
         //
         this.comboMaxLoginsPerIP.setModel(new DefaultComboBoxModel<>(ActionsFacade.loginsArrayPerIP));
         this.comboMaxLoginsPerIP.setEditable(false);
-        this.comboMaxLoginsPerIP.setSelectedItem("3");
+        this.comboMaxLoginsPerIP.setSelectedItem("80");
         //ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(comboMaxLoginsPerIP.getSelectedItem().toString());        
         //System.out.println("Max concurrent Logins Per IP = "+ConfigFTP.MAX_CONCURRENT_LOGINS_PER_IP);
         // 
@@ -201,14 +202,20 @@ public class PjFtpServer extends javax.swing.JFrame {
             //ConfigFTP.allowNetPrefixMask=comboPrefixMask.getSelectedItem().toString().trim();
             //System.out.println("Allow Network = "+aclNetAddress+allowNetPrefixMask.split("=")[0]);             
             //sessionFilter = new RemoteIpFilter(IpFilterType.ALLOW, aclNetAddress + allowNetPrefixMask.split("=")[0]);
-            RemoteIpFilter rif = new RemoteIpFilter(ActionsFacade.aclTypeMap.get(ConfigFTP.aclType.trim()));
+            rif = new RemoteIpFilter(ActionsFacade.aclTypeMap.get(ConfigFTP.aclType.trim()));
+            // IP-filter bug fixed ! Then tfAclNetAdres NOT equal su.getInfo().getNetworkAddress() -> IP-filter NOT work !!!
+            SubnetUtils su = new SubnetUtils(ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix);
+            if (!su.getInfo().getNetworkAddress().equals(ConfigFTP.aclNetAddress.trim())) {
+                ConfigFTP.aclNetAddress = su.getInfo().getNetworkAddress();
+                tfAclNetAdres.setText(su.getInfo().getNetworkAddress());
+            }
             boolean bnet=rif.add(ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix);
             boolean bloop=rif.add("127.0.0.1"); //- BLOCK LOOP-BACK IF NOT LISTEN ON THIS !!!!!!!!!!!!!!!!!!!!!
             if (bnet && bloop) {
                 System.out.println("IP-Filter Type = " +rif.getType().name());
                 j4log.log(Level.INFO, "IP-Filter Type = " +rif.getType().name());                
-                System.out.println("IP-Filter Network = " +ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix +" , IP-Filter make success !");
-                j4log.log(Level.INFO, "IP-Filter Network = " +ConfigFTP.aclNetAddress + ConfigFTP.aclNetPrefix +" , IP-Filter make success !");
+                System.out.println("IP-Filter Networks = " + rif.toString() +" , IP-Filter make success !");
+                j4log.log(Level.INFO, "IP-Filter Network = " + rif.toString() +" , IP-Filter make success !");
                 if (rif.getType().name().equals("DENY")) { 
                     System.out.println("IP-Filter:  All other networks are allowed");
                     j4log.log(Level.INFO, "IP-Filter:  All other networks are allowed");
@@ -217,8 +224,8 @@ public class PjFtpServer extends javax.swing.JFrame {
                     j4log.log(Level.INFO, "IP-Filter:  All other networks are denied");
                 }
             }
-            sessionFilter=rif;
-            listenerFactory.setSessionFilter(sessionFilter);
+            //sessionFilter=rif;
+            listenerFactory.setSessionFilter(rif);
         } catch (NumberFormatException | UnknownHostException ex) {
             java.util.logging.Logger.getLogger(PjFtpServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }            
@@ -230,7 +237,7 @@ public class PjFtpServer extends javax.swing.JFrame {
 
         ConnectionConfigFactory configFactory = new ConnectionConfigFactory();
         //configFactory.setAnonymousLoginEnabled(true);
-        configFactory.setMaxThreads(ConfigFTP.MAX_THREADS_LOGINS + 8);
+        configFactory.setMaxThreads(ConfigFTP.MAX_THREADS_LOGINS + 19);
         configFactory.setMaxAnonymousLogins(ConfigFTP.MAX_THREADS_LOGINS);
         configFactory.setMaxLogins(ConfigFTP.MAX_THREADS_LOGINS);
         ConnectionConfig connectionConfig = configFactory.createConnectionConfig();
@@ -256,8 +263,8 @@ public class PjFtpServer extends javax.swing.JFrame {
         j4log.log(Level.INFO, "Folder = "+ConfigFTP.folder);
         j4log.log(Level.INFO, maxSpeedString());
         if (ConfigFTP.ipFilterEnabled) {
-            j4log.log(Level.INFO, "IP-Filter Network = " + ConfigFTP.aclNetAddress+ConfigFTP.aclNetPrefix);
-            j4log.log(Level.INFO, "IP-Filter Type = " + ConfigFTP.aclType.toUpperCase());
+            j4log.log(Level.INFO, "IP-Filter Networks = " + rif.toString());
+            j4log.log(Level.INFO, "IP-Filter Type = " + rif.getType().name());
             if (ConfigFTP.aclType.trim().equals("deny")) { 
                 System.out.println("IP-Filter:  All other networks are allowed");
                 j4log.log(Level.INFO, "IP-Filter:  All other networks are allowed");
@@ -920,7 +927,7 @@ public class PjFtpServer extends javax.swing.JFrame {
                     JDialog.setDefaultLookAndFeelDecorated(true);
                     JOptionPane.setRootFrame(frame);
                     frame.setSize(ICFG.FW, ICFG.FH);
-                    frame.setLocation(222, 222);
+                    frame.setLocation(155, 155);
                     frame.setResizable(true);
                     frame.setVisible(true);
                 }

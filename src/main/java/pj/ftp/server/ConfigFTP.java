@@ -19,8 +19,8 @@ public class ConfigFTP {
     public static String password;
     public static String folder=FileUtils.getTempDirectoryPath();//System.getProperty("java.io.tmpdir");
     public static String port=ICFG.DEFAULT_PORT;
-    public static int MAX_CONCURRENT_LOGINS = 10;
-    public static int MAX_CONCURRENT_LOGINS_PER_IP = 3;
+    public static int MAX_CONCURRENT_LOGINS = 80;
+    public static int MAX_CONCURRENT_LOGINS_PER_IP = 80;
     public static int MAX_IDLE_TIME = 999;
     public static int MAX_THREADS_LOGINS = 100;
     public static int MAX_SPEED = 125_000_000;// = Integer.MAX_VALUE;99_999;//Integer.MAX_VALUE; = in Kbit/sek !!
@@ -45,8 +45,8 @@ public class ConfigFTP {
             port=prop.getProperty("port", ICFG.DEFAULT_PORT).trim();
             folder=prop.getProperty("folder", FileUtils.getTempDirectoryPath()).trim();
             writable=Boolean.parseBoolean(prop.getProperty("writable", "true").trim());
-            MAX_CONCURRENT_LOGINS=Integer.parseInt(prop.getProperty("max.concurrent.logins", "10").trim());
-            MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(prop.getProperty("max.concurrent.logins.per.ip", "3").trim());
+            MAX_CONCURRENT_LOGINS=Integer.parseInt(prop.getProperty("max.concurrent.logins", "80").trim());
+            MAX_CONCURRENT_LOGINS_PER_IP=Integer.parseInt(prop.getProperty("max.concurrent.logins.per.ip", "80").trim());
             MAX_THREADS_LOGINS=MAX_CONCURRENT_LOGINS;
             ipFilterEnabled=Boolean.parseBoolean(prop.getProperty("ip.filter.enabled", "false").trim());
             aclNetAddress=prop.getProperty("ip.filter.network.address", "10.0.0.0").trim();
@@ -60,8 +60,8 @@ public class ConfigFTP {
             port=ICFG.DEFAULT_PORT;
             folder=FileUtils.getTempDirectoryPath().trim();
             writable=true;
-            MAX_CONCURRENT_LOGINS=10;
-            MAX_CONCURRENT_LOGINS_PER_IP=3;
+            MAX_CONCURRENT_LOGINS=80;
+            MAX_CONCURRENT_LOGINS_PER_IP=80;
             MAX_THREADS_LOGINS=MAX_CONCURRENT_LOGINS;
             ipFilterEnabled=false;
             aclNetAddress="10.0.0.0";
