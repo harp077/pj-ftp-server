@@ -1,7 +1,7 @@
 [![Total downloads](https://img.shields.io/github/downloads/harp077/pj-ftp-server/total.svg)](https://github.com/harp077/pj-ftp-server/releases)
 [![Latest downloads](https://img.shields.io/github/downloads/harp077/pj-ftp-server/latest/total.svg)](https://github.com/harp077/pj-ftp-server/releases)
-[![Release](https://img.shields.io/github/v/release/harp077/pj-ftp-server)](https://github.com/harp077/pj-ftp-server/releases)
-[![Java 8+](https://img.shields.io/badge/Java-8%2B-blue)](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)
+[![Release](https://img.shields.io/github/release/harp077/pj-ftp-server)](https://github.com/harp077/pj-ftp-server/releases)
+[![Java 8+](https://img.shields.io/badge/Java-8%2B-teal)](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)
 
 ![ftp](pj-ftp-server.png?raw=true)
 
