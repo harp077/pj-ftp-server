@@ -1,3 +1,7 @@
+![Total downloads](https://img.shields.io/github/downloads/harp077/pj-ftp-server/total.svg)
+![Latest downloads](https://img.shields.io/github/downloads/harp077/pj-ftp-server/latest/total.svg)
+![Release](https://img.shields.io/github/v/release/harp077/pj-ftp-server)
+
 ![ftp](pj-ftp-server.png?raw=true)
 
 Pure Java FTP server. Free portable cross-platform.
