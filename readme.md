@@ -1,5 +1,9 @@
+<!--
 [![Total downloads](https://img.shields.io/github/downloads/harp077/pj-ftp-server/total.svg)](https://github.com/harp077/pj-ftp-server/releases)
 [![Latest downloads](https://img.shields.io/github/downloads/harp077/pj-ftp-server/latest/total.svg)](https://github.com/harp077/pj-ftp-server/releases)
+-->
+<a href="https://github.com/harp077/pj-ftp-server/releases" title="GitHub Downloads"><img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/harp077/pj-ftp-server/total"></a>
+<a href="https://github.com/harp077/pj-ftp-server/releases" title="GitHub Latest Downloads"><img alt="GitHub Downloads (all assets, latest release)" src="https://img.shields.io/github/downloads/harp077/pj-ftp-server/latest/total"></a>
 [![Release](https://img.shields.io/github/release/harp077/pj-ftp-server)](https://github.com/harp077/pj-ftp-server/releases)
 [![Java 8+](https://img.shields.io/badge/Java-8%2B-teal)](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)
 ![Free](https://img.shields.io/badge/free-open--source-green.svg)
@@ -11,6 +15,7 @@
 <a href="https://github.com/harp077/pj-ftp-server/commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/harp077/pj-ftp-server?style=flat"></a>
 <a href="https://github.com/harp077/pj-ftp-server/issues" title="Open Issues"><img src="https://img.shields.io/github/issues/harp077/pj-ftp-server?style=flat"></a>
 <a href="https://github.com/harp077/pj-ftp-server/stargazers"><img src="https://img.shields.io/github/stars/harp077/pj-ftp-server?style=flat" alt="GitHub stars" /></a>
+<a href="https://sourceforge.net/projects/pj-ftp-server" title="SourceForge Downloads"><img alt="SourceForge Downloads" src="https://img.shields.io/sourceforge/dt/pj-ftp-server"></a>
 <!-- styles = flat, flat-square, social  -->
 Pure Java FTP server.
 
